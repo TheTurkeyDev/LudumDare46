@@ -1,0 +1,33 @@
+{
+  "id": "oak",
+  "type": "tree",
+  "display": "Oak",
+  "base_growth_speed": 1,
+  "attributes": [
+    {
+      "name": "lp",
+      "base": 100,
+      "decay": 1
+    },
+    {
+      "name": "water",
+      "base": 100,
+      "decay": 1
+    },
+    {
+      "name": "light",
+      "base": 100
+    },
+    {
+      "name": "nutrient",
+      "type": "A",
+      "base": 100,
+      "decay": 1
+    },
+    {
+      "name": "temp",
+      "min": 0,
+      "max": 100
+    }
+  ]
+}
