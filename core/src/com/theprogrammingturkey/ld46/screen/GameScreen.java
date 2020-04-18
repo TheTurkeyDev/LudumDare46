@@ -10,7 +10,6 @@ import com.theprogrammingturkey.ld46.screen.overlay.Overlay;
 
 public class GameScreen implements Screen
 {
-
 	private Stage stage;
 	private GameCore theGame;
 
@@ -35,6 +34,13 @@ public class GameScreen implements Screen
 			{
 				if(!super.keyUp(keycode))
 					return theGame.keyUp(keycode);
+				return true;
+			}
+
+			public boolean touchDown(int screenX, int screenY, int pointer, int button)
+			{
+				if(!super.touchDown(screenX, screenY, pointer, button))
+					return theGame.touchDown(screenX, screenY, pointer, button);
 				return true;
 			}
 		};

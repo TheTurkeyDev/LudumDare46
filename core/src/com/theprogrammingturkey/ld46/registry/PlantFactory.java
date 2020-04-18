@@ -42,6 +42,8 @@ public class PlantFactory
 			JsonObject json = plantsToJson.get(id);
 			Plant p = plantsToClasses.get(id).getDeclaredConstructor(Vector2.class).newInstance(loc.cpy());
 			p.setDisplayName(json.get("display").getAsString());
+			if(json.has("base_growth_speed"))
+				p.setGrowthRate(json.get("base_growth_speed").getAsFloat());
 
 			for(JsonElement element : json.getAsJsonArray("attributes"))
 			{
@@ -68,7 +70,7 @@ public class PlantFactory
 						NutrientAttribute nutrientAttribute = new NutrientAttribute(base, 0, 100);
 						p.addAttribute(nutrientAttribute);
 						break;
-					case "temprature":
+					case "temperature":
 						TempratureAttribute tempratureAttribute = new TempratureAttribute(base, 0, 100);
 						p.addAttribute(tempratureAttribute);
 						break;

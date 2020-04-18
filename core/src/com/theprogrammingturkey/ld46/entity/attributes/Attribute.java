@@ -35,5 +35,17 @@ public abstract class Attribute
 		this.maxValue = maxValue;
 	}
 
+	public float getMinValue()
+	{
+		return minValue;
+	}
+
+	public void setMinValue(float minValue)
+	{
+		this.minValue = minValue;
+	}
+
 	public abstract void update(Plant plant);
+
+	public abstract void renderAsInfoGraphic(float delta, int x, int y);
 }

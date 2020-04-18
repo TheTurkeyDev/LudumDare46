@@ -2,20 +2,29 @@ package com.theprogrammingturkey.ld46.rendering;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.utils.Align;
 
 public class Renderer
 {
-
 	private static SpriteBatch batch;
 	private static ShapeRenderer shape;
 	private static OrthographicCamera camera;
 
 	public static BitmapFont font;
+	public static BitmapFont rust;
+	private static GlyphLayout glyphLayout = new GlyphLayout();
+
+	public static Texture atlas;
+
 
 	public static void init()
 	{
@@ -26,7 +35,8 @@ public class Renderer
 		shape = new ShapeRenderer();
 
 		font = new BitmapFont(Gdx.files.internal("fonts/test.fnt"), false);
-		//font = new BitmapFont();
+		rust = new BitmapFont(Gdx.files.internal("fonts/rust.fnt"), false);
+		atlas = new Texture("textures/spritesheet.png");
 	}
 
 	public static void update()
@@ -51,11 +61,22 @@ public class Renderer
 		camera.setToOrtho(false, width, height);
 	}
 
-	public static void draw(Renderable renderable, float delta)
+	public static void draw(TextureRegion region, float x, float y, float width, float height)
 	{
 		if(batch.isDrawing())
 		{
-			renderable.getSprite(delta).draw(batch);
+			batch.draw(region, x, y, width, height);
+		}
+	}
+
+	public static void draw(TextureRegion region, float x, float y, float width, float height, Color tint)
+	{
+		if(batch.isDrawing())
+		{
+			Color cache = batch.getColor().cpy();
+			batch.setColor(tint);
+			batch.draw(region, x, y, width, height);
+			batch.setColor(cache);
 		}
 	}
 
@@ -66,6 +87,33 @@ public class Renderer
 		f.draw(batch, str, x, y);
 	}
 
+	public static void drawStringAligned(BitmapFont f, float x, float y, String str, float scale, int align, Color color)
+	{
+		f.getData().setScale(scale);
+		glyphLayout.setText(f, str, color, 0, align, false);
+		f.setColor(color);
+		float drawX = x;
+		if(align == Align.center)
+		{
+			drawX = x - (glyphLayout.width / 2);
+		}
+		else if(align == Align.right)
+		{
+			drawX = x - glyphLayout.width;
+		}
+		f.draw(batch, str, drawX, y + (glyphLayout.height / 2));
+	}
+
+
+	public static void drawStringCenteredWithBG(BitmapFont f, float x, float y, String str, float scale, Color color)
+	{
+		f.getData().setScale(scale);
+		glyphLayout.setText(f, str, color, 0, Align.center, false);
+		f.setColor(color);
+		Renderer.drawRect(x - (glyphLayout.width / 2) - 30, y - (glyphLayout.height / 2) - 10, glyphLayout.width + 60, glyphLayout.height + 20, GameColors.TEXT_ALPHA_BG, true);
+		font.draw(batch, str, x - (glyphLayout.width / 2), y + (glyphLayout.height / 2));
+	}
+
 	public static void drawRect(float x, float y, float width, float height, Color color, boolean filled)
 	{
 		drawRect(x, y, width, height, 0, color, filled);
@@ -74,12 +122,42 @@ public class Renderer
 	public static void drawRect(float x, float y, float width, float height, int degrees, Color color, boolean filled)
 	{
 		batch.end();
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		if(filled)
 			shape.begin(ShapeType.Filled);
 		else
 			shape.begin(ShapeType.Line);
 		shape.setColor(color);
 		shape.rect(x, y, 8, 8, width, height, 1, 1, degrees);
+		shape.end();
+		batch.begin();
+	}
+
+	public static void drawGradientRect(float x, float y, float width, float height, int degrees, Color colorLeft, Color colorRight, boolean filled)
+	{
+		batch.end();
+		if(filled)
+			shape.begin(ShapeType.Filled);
+		else
+			shape.begin(ShapeType.Line);
+		shape.rect(x, y, 8, 8, width, height, 1, 1, degrees, colorLeft, colorRight, colorRight, colorLeft);
+		shape.end();
+		batch.begin();
+	}
+
+
+	public static void drawCircle(float x, float y, float radius, Color color, boolean filled)
+	{
+		batch.end();
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		if(filled)
+			shape.begin(ShapeType.Filled);
+		else
+			shape.begin(ShapeType.Line);
+		shape.setColor(color);
+		shape.circle(x, y, radius, 100);
 		shape.end();
 		batch.begin();
 	}
@@ -99,5 +177,6 @@ public class Renderer
 		batch.dispose();
 		shape.dispose();
 		font.dispose();
+		atlas.dispose();
 	}
 }

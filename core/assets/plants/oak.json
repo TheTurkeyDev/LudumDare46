@@ -1,8 +1,8 @@
 {
   "id": "oak",
   "type": "tree",
-  "display": "Oak",
-  "base_growth_speed": 1,
+  "display": "Oak Tree",
+  "base_growth_speed": 0.0005,
   "attributes": [
     {
       "name": "lp",
@@ -25,7 +25,7 @@
       "decay": 1
     },
     {
-      "name": "temp",
+      "name": "temperature",
       "min": 0,
       "max": 100
     }

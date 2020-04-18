@@ -2,7 +2,7 @@ package com.theprogrammingturkey.ld46.entity.attributes;
 
 import com.theprogrammingturkey.ld46.entity.Plant;
 
-public class DectramentalAttribute extends Attribute
+public abstract class DectramentalAttribute extends Attribute
 {
 	float decramentValue;
 
