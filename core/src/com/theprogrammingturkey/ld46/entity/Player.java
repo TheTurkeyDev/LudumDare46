@@ -1,8 +1,11 @@
 package com.theprogrammingturkey.ld46.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.theprogrammingturkey.ld46.entity.state.PlayerState;
+import com.theprogrammingturkey.ld46.game.GameCore;
+import com.theprogrammingturkey.ld46.rendering.Animation;
 import com.theprogrammingturkey.ld46.rendering.GameColors;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.WrapperTR;
@@ -15,21 +18,45 @@ public class Player extends Entity
 
 	// W/A/S/D
 	public boolean[] moveKeys = new boolean[4];
+	private Animation currentAnimation;
+	private Animation frontAnimation;
 
 	public PlayerState state = PlayerState.NONE;
 
-	public Player(Vector2 location)
+	public Player(GameCore gameCore, Vector2 location)
 	{
-		super(location, new Vector2(32, 32), new WrapperTR(64, 0));
+		super(gameCore, location, new Vector2(64, 64), new WrapperTR(64, 0));
+
+		//TextureRegion[] leftTextures = new TextureRegion[5];
+		//TextureRegion[] rightTextures = new TextureRegion[5];
+		TextureRegion[] frontTextures = new TextureRegion[4];
+		//TextureRegion[] backTextures = new TextureRegion[5];
+		for(int i = 0; i < 4; i++)
+		{
+			//leftTextures[i - 1] = new TextureRegion("textures/player/playerLeft" + i + ".png");
+			//rightTextures[i - 1] = new TextureRegion("textures/player/playerRight" + i + ".png");
+			frontTextures[i] = new TextureRegion(Renderer.atlas, 64 * i, 64, 64, 64);
+			//backTextures[i - 1] = new TextureRegion("textures/player/playerBack" + i + ".png");
+		}
+
+		//leftAnimation = new Animation(10, true, leftTextures);
+		//rightAnimation = new Animation(10, true, rightTextures);
+		frontAnimation = new Animation(10, true, frontTextures);
+		//backAnimation = new Animation(10, true, backTextures);
+
+		currentAnimation = frontAnimation;
 	}
 
 	public void update()
 	{
 		super.update();
+		currentAnimation.setMoving(false);
+
 		for(Direction d : Direction.values())
 		{
 			if(moveKeys[d.getVal()])
 			{
+				currentAnimation.setMoving(true);
 				d.addToLoc(location, MOVE_SPEED);
 			}
 		}
@@ -49,7 +76,9 @@ public class Player extends Entity
 			Renderer.drawCircle(centerX, centerY, placement_radius, inside ? GameColors.VALID_AREA_NO_ALPHA : GameColors.INVALID_AREA_NO_ALPHA, false);
 		}
 
-		super.render(delta);
+		currentAnimation.update();
+		Renderer.draw(this.currentAnimation.getCurrentTexture(), location.x, location.y, size.x, size.y);
+		//super.render(delta);
 	}
 
 	public void setMoveState(Direction direction, boolean state)

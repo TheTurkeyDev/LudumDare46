@@ -3,7 +3,6 @@ package com.theprogrammingturkey.ld46.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -15,9 +14,12 @@ import com.theprogrammingturkey.ld46.entity.Player;
 import com.theprogrammingturkey.ld46.entity.state.PlayerState;
 import com.theprogrammingturkey.ld46.registry.PlantFactory;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
+import com.theprogrammingturkey.ld46.rendering.Textures;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
+import com.theprogrammingturkey.ld46.screen.overlay.ActionsOverlay;
 import com.theprogrammingturkey.ld46.screen.overlay.PlantStatusOverlay;
 import com.theprogrammingturkey.ld46.util.Direction;
+import com.theprogrammingturkey.ld46.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +32,8 @@ public class GameCore
 
 	private GameScreen screen;
 
-	private TextureRegion backgroundtile;
-
-
 	private Time gameTime;
+	private Weather weather;
 	private float light = 0f;
 	private float sunAngle = 0f;
 
@@ -43,16 +43,24 @@ public class GameCore
 	public GameCore(GameScreen screen)
 	{
 		gameTime = new Time();
-		backgroundtile = new TextureRegion(Renderer.atlas, 0, 0, 64, 64);
+		weather = new Weather();
 		this.screen = screen;
-		thePlayer = new Player(new Vector2(200, 200));
+		thePlayer = new Player(this, new Vector2(200, 200));
 
 		PlantFactory.loadPlants();
+
+		PlantFactory factory = new PlantFactory(PlantType.TREE, "oak");
+		Plant plant = factory.create(this, new Vector2(400, 400));
+		plant.getLifePointsAttribute().setMaxValue(100);
+		plant.getLifePointsAttribute().setCurrentValue(100);
+		plant.setSize(150f);
+		plantList.add(plant);
 	}
 
 	public void update()
 	{
 		gameTime.update();
+		weather.update(gameTime);
 
 		int hours = gameTime.getHour();
 		int minutes = gameTime.getMinute();
@@ -64,6 +72,7 @@ public class GameCore
 		for(Plant plant : plantList)
 		{
 			plant.update();
+			//TODO: Deal with overlaps/ shadows
 		}
 	}
 
@@ -73,7 +82,7 @@ public class GameCore
 		{
 			for(int y = 0; y < Gdx.graphics.getHeight(); y += 64)
 			{
-				Renderer.draw(backgroundtile, x, y, 64, 64);
+				Renderer.draw(Textures.backgroundtile, x, y, 64, 64);
 			}
 		}
 
@@ -97,22 +106,24 @@ public class GameCore
 		int cx = Gdx.graphics.getWidth() - 40;
 		int cy = Gdx.graphics.getHeight() - 40;
 
-		float sunX = ((float) Math.cos(sunAngle) * 30) + cx;
-		float sunY = ((float) Math.sin(sunAngle) * 30) + cy;
-		float moonX = ((float) Math.cos(sunAngle + Math.PI) * 30) + cx;
-		float moonY = ((float) Math.sin(sunAngle + Math.PI) * 30) + cy;
+		float sunX = ((float) Math.cos(-sunAngle + Math.PI) * 30) + cx;
+		float sunY = ((float) Math.sin(-sunAngle + Math.PI) * 30) + cy;
+		float moonX = ((float) Math.cos(-sunAngle) * 30) + cx;
+		float moonY = ((float) Math.sin(-sunAngle) * 30) + cy;
 
 		groundColor.fromHsv(120, 1, MathUtils.clamp(light, 0.15f, 0.6f));
 		skyColor.fromHsv(190, .75f, MathUtils.clamp(light, 0.15f, 0.95f));
 
 		Renderer.drawRect(cx - 40, cy, 80, 40, skyColor, true);
 
-		Renderer.drawCircle(sunX, sunY, 10, Color.YELLOW, true);
-		Renderer.drawCircle(moonX, moonY, 10, Color.LIGHT_GRAY, true);
+		Renderer.draw(Textures.sun, sunX - 10, sunY - 10, 20, 20);
+		Renderer.draw(Textures.moon, moonX - 10, moonY - 10, 20, 20);
 
 		Renderer.drawRect(cx - 40, cy - 40, 80, 40, groundColor, true);
 
 		Renderer.drawStringAligned(Renderer.rust, cx, cy - 50, time.toString(), .25f, Align.center, Color.WHITE);
+		Renderer.drawStringAligned(Renderer.rust, cx, cy - 70, "Day: " + gameTime.getDay(), .2f, Align.center, Color.WHITE);
+		Renderer.drawStringAligned(Renderer.rust, cx, cy - 90, "Temp: " + StringUtil.formatDecimal(weather.getTemp()), .2f, Align.center, Color.WHITE);
 
 		for(Plant plant : plantList)
 		{
@@ -120,6 +131,16 @@ public class GameCore
 		}
 
 		thePlayer.render(delta);
+	}
+
+	public Weather getWeather()
+	{
+		return weather;
+	}
+
+	public float getCurrentLight()
+	{
+		return light;
 	}
 
 	public boolean keyDown(int keycode)
@@ -184,7 +205,7 @@ public class GameCore
 			if(thePlayer.isVAlidPlacementLoc(screenX, yFlip))
 			{
 				PlantFactory factory = new PlantFactory(PlantType.TREE, "oak");
-				Plant p = factory.create(new Vector2(screenX, yFlip));
+				Plant p = factory.create(this, new Vector2(screenX, yFlip));
 				plantList.add(p);
 				thePlayer.setState(PlayerState.NONE);
 				return true;
@@ -195,14 +216,19 @@ public class GameCore
 			}
 		}
 
-		if(button == 0)
+		for(Plant plant : plantList)
 		{
-			for(Plant plant : plantList)
+			Rectangle rect = plant.getBoundingBox();
+			if(rect.contains(screenX, yFlip))
 			{
-				Rectangle rect = plant.getBoundingBox();
-				if(rect.contains(screenX, yFlip))
+				if(button == 0)
 				{
 					screen.setCurrentOverlay(new PlantStatusOverlay(plant, screen, null));
+					return true;
+				}
+				else if(button == 1)
+				{
+					screen.setCurrentOverlay(new ActionsOverlay(plant, screen, null));
 					return true;
 				}
 			}

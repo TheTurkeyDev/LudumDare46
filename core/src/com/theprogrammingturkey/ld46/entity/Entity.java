@@ -1,8 +1,8 @@
 package com.theprogrammingturkey.ld46.entity;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.theprogrammingturkey.ld46.game.GameCore;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.WrapperTR;
 
@@ -12,13 +12,15 @@ import java.util.List;
 
 public class Entity
 {
+	protected GameCore game;
 	protected Vector2 location;
 	protected Vector2 size;
 
 	protected List<WrapperTR> regions = new ArrayList<>();
 
-	public Entity(Vector2 location, Vector2 size, WrapperTR... atlasLocs)
+	public Entity(GameCore game, Vector2 location, Vector2 size, WrapperTR... atlasLocs)
 	{
+		this.game = game;
 		this.location = location;
 		this.size = size;
 		Collections.addAll(regions, atlasLocs);

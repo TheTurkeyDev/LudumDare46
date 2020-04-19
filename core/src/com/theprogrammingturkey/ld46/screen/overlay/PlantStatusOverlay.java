@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.theprogrammingturkey.ld46.entity.Plant;
-import com.theprogrammingturkey.ld46.entity.attributes.Attribute;
+import com.theprogrammingturkey.ld46.entity.attributes.NutrientAttribute;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
 
@@ -50,10 +50,18 @@ public class PlantStatusOverlay extends Overlay
 		plant.renderPreview(delta, x + (width / 2f) + 186, top - 70, 64, 64);
 
 		float yInc = top - 90;
-		for(Attribute attribute : plant.getAttributes())
+		plant.getLifePointsAttribute().renderAsInfoGraphic(delta, x + 30, (int) yInc);
+		yInc -= 50;
+		plant.getWaterAttribute().renderAsInfoGraphic(delta, x + 30, (int) yInc);
+		yInc -= 50;
+		plant.getLightAttribute().renderAsInfoGraphic(delta, x + 30, (int) yInc);
+		yInc -= 50;
+		plant.getTempratureAttribute().renderAsInfoGraphic(delta, x + 30, (int) yInc);
+
+		for(NutrientAttribute nutrientAttribute : plant.getNutrientAttributes())
 		{
-			attribute.renderAsInfoGraphic(delta, x + 30, (int) yInc);
 			yInc -= 50;
+			nutrientAttribute.renderAsInfoGraphic(delta, x + 30, (int) yInc);
 		}
 	}
 }

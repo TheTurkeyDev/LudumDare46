@@ -1,10 +1,11 @@
 package com.theprogrammingturkey.ld46.entity.attributes;
 
 import com.theprogrammingturkey.ld46.entity.Plant;
+import com.theprogrammingturkey.ld46.game.Weather;
 
 public abstract class Attribute
 {
-	private float currentValue;
+	protected float currentValue;
 	private float minValue;
 	private float maxValue;
 
@@ -45,7 +46,7 @@ public abstract class Attribute
 		this.minValue = minValue;
 	}
 
-	public abstract void update(Plant plant);
+	public abstract void update(Plant plant, Weather weather);
 
 	public abstract void renderAsInfoGraphic(float delta, int x, int y);
 }

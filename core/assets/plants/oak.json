@@ -5,14 +5,9 @@
   "base_growth_speed": 0.0005,
   "attributes": [
     {
-      "name": "lp",
-      "base": 100,
-      "decay": 1
-    },
-    {
       "name": "water",
       "base": 100,
-      "decay": 1
+      "decay": 0.0005
     },
     {
       "name": "light",
@@ -26,8 +21,8 @@
     },
     {
       "name": "temperature",
-      "min": 0,
-      "max": 100
+      "min": -30,
+      "max": 50
     }
   ]
 }

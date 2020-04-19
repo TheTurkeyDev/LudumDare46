@@ -162,6 +162,26 @@ public class Renderer
 		batch.begin();
 	}
 
+	public static void drawArc(float x, float y, float radius, float start, float radians, Color color, boolean filled)
+	{
+		batch.end();
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		if(filled)
+		{
+			shape.begin(ShapeType.Filled);
+		}
+		else
+		{
+			shape.begin(ShapeType.Line);
+			Gdx.gl.glLineWidth(2f);
+		}
+		shape.setColor(color);
+		shape.arc(x, y, radius, (float) Math.toDegrees(start), (float) Math.toDegrees(radians));
+		shape.end();
+		batch.begin();
+	}
+
 	public static void drawLine(float x, float y, float x2, float y2, Color color)
 	{
 		batch.end();

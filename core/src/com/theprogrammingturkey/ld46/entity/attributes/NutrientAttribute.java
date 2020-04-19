@@ -2,6 +2,7 @@ package com.theprogrammingturkey.ld46.entity.attributes;
 
 import com.badlogic.gdx.graphics.Color;
 import com.theprogrammingturkey.ld46.entity.Plant;
+import com.theprogrammingturkey.ld46.game.Weather;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 
 public class NutrientAttribute extends Attribute
@@ -12,7 +13,7 @@ public class NutrientAttribute extends Attribute
 	}
 
 	@Override
-	public void update(Plant plant)
+	public void update(Plant plant, Weather weather)
 	{
 
 	}

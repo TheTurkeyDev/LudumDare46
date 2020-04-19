@@ -15,6 +15,7 @@ import com.theprogrammingturkey.ld46.entity.attributes.LightAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.NutrientAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.TempratureAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.WaterAttribute;
+import com.theprogrammingturkey.ld46.game.GameCore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,17 +34,19 @@ public class PlantFactory
 		this.plantID = id;
 	}
 
-	public Plant create(Vector2 loc)
+	public Plant create(GameCore gameCore, Vector2 loc)
 	{
 		try
 		{
 
 			String id = type.getName() + "/" + plantID;
 			JsonObject json = plantsToJson.get(id);
-			Plant p = plantsToClasses.get(id).getDeclaredConstructor(Vector2.class).newInstance(loc.cpy());
+			Plant p = plantsToClasses.get(id).getDeclaredConstructor(GameCore.class, Vector2.class).newInstance(gameCore, loc.cpy());
 			p.setDisplayName(json.get("display").getAsString());
 			if(json.has("base_growth_speed"))
 				p.setGrowthRate(json.get("base_growth_speed").getAsFloat());
+
+			p.setLifePointsAttribute(new LifePointsAttribute());
 
 			for(JsonElement element : json.getAsJsonArray("attributes"))
 			{
@@ -53,26 +56,24 @@ public class PlantFactory
 					base = attribute.get("base").getAsFloat();
 				switch(attribute.get("name").getAsString())
 				{
-					case "lp":
-						LifePointsAttribute lpAttrib = new LifePointsAttribute(base, base);
-						p.addAttribute(lpAttrib);
-						break;
 					case "water":
 						float decay = attribute.get("decay").getAsFloat();
 						WaterAttribute waterAttribute = new WaterAttribute(base, 0, 100, decay);
-						p.addAttribute(waterAttribute);
+						p.setWaterAttribute(waterAttribute);
 						break;
 					case "light":
 						LightAttribute lightAttribute = new LightAttribute(base, 0, 100);
-						p.addAttribute(lightAttribute);
+						p.setLightAttribute(lightAttribute);
 						break;
 					case "nutrient":
 						NutrientAttribute nutrientAttribute = new NutrientAttribute(base, 0, 100);
-						p.addAttribute(nutrientAttribute);
+						p.addNutrientAttributes(nutrientAttribute);
 						break;
 					case "temperature":
-						TempratureAttribute tempratureAttribute = new TempratureAttribute(base, 0, 100);
-						p.addAttribute(tempratureAttribute);
+						float min = attribute.get("min").getAsFloat();
+						float max = attribute.get("max").getAsFloat();
+						TempratureAttribute tempratureAttribute = new TempratureAttribute(base, min, max);
+						p.setTempratureAttribute(tempratureAttribute);
 						break;
 				}
 			}

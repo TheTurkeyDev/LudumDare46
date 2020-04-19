@@ -40,7 +40,13 @@ public class GameScreen implements Screen
 			public boolean touchDown(int screenX, int screenY, int pointer, int button)
 			{
 				if(!super.touchDown(screenX, screenY, pointer, button))
+				{
+					if(currenOverlay != null)
+					{
+						return currenOverlay.touchDown(screenX, screenY, pointer, button);
+					}
 					return theGame.touchDown(screenX, screenY, pointer, button);
+				}
 				return true;
 			}
 		};
