@@ -1,9 +1,10 @@
 {
-  "id": "oak",
+  "id": "bonsai",
   "type": "tree",
-  "display": "Oak Tree",
-  "base_growth_speed": 0.005,
-  "size_scalar": 15,
+  "display": "Bonsai Tree",
+  "base_growth_pow": 0.35,
+  "base_growth_speed": 0.02,
+  "size_scalar": 9,
   "attributes": [
     {
       "name": "water",
@@ -15,12 +16,6 @@
       "base": 100
     },
     {
-      "name": "nutrient",
-      "type": "A",
-      "base": 100,
-      "decay": 1
-    },
-    {
       "name": "temperature",
       "min": -30,
       "max": 50
@@ -28,13 +23,13 @@
   ],
   "textures": [
     {
-      "x": 2,
+      "x": 4,
       "y": 0,
       "width": 64,
       "height": 64
     },
     {
-      "x": 3,
+      "x": 5,
       "y": 0,
       "width": 64,
       "height": 64,

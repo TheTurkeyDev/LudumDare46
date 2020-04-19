@@ -10,4 +10,8 @@ public class GameColors
 	public static final Color INVALID_AREA_NO_ALPHA = new Color(.75f, 0, 0, 1f);
 
 	public static final Color TEXT_ALPHA_BG = new Color(0.1f, 0.1f, 0.1f, .5f);
+	public static final Color HIGHLIGHT_ALPHA_BG = new Color(0.6f, 0.6f, 0.6f, .5f);
+
+	public static final Color GROUND = Color.GREEN.cpy();
+	public static final Color SKY = Color.BLUE.cpy();
 }

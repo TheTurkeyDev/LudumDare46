@@ -16,6 +16,7 @@ public class Textures
 	public static TextureRegion waterDroplet;
 	public static TextureRegion waterDropletOutline;
 	public static TextureRegion thermometer;
+	public static TextureRegion arrow;
 
 	public static TextureRegion hotbar;
 	public static TextureRegion hotbarExtension;
@@ -32,6 +33,7 @@ public class Textures
 		waterDroplet = new TextureRegion(atlas, 21 * 64, 0, 64, 64);
 		waterDropletOutline = new TextureRegion(atlas, 24 * 64, 0, 64, 64);
 		thermometer = new TextureRegion(atlas, 28 * 64, 0, 64, 64);
+		arrow = new TextureRegion(atlas, 19 * 64, 0, 64, 64);
 
 		hotbar = new TextureRegion(hotbarTex, 0, 0, 380, 79);
 		hotbarExtension = new TextureRegion(hotbarTex, 0, 80, 380, 333);

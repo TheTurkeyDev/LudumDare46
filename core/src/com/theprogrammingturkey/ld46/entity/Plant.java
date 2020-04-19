@@ -1,10 +1,7 @@
 package com.theprogrammingturkey.ld46.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.theprogrammingturkey.ld46.LD46;
 import com.theprogrammingturkey.ld46.entity.attributes.LifePointsAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.LightAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.NutrientAttribute;
@@ -12,9 +9,8 @@ import com.theprogrammingturkey.ld46.entity.attributes.TempratureAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.WaterAttribute;
 import com.theprogrammingturkey.ld46.game.GameCore;
 import com.theprogrammingturkey.ld46.game.GameValues;
-import com.theprogrammingturkey.ld46.item.Item;
-import com.theprogrammingturkey.ld46.registry.ItemRegistry;
-import com.theprogrammingturkey.ld46.rendering.GameColors;
+import com.theprogrammingturkey.ld46.game.World;
+import com.theprogrammingturkey.ld46.item.ItemStack;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.WrapperTR;
 
@@ -31,13 +27,15 @@ public class Plant extends Entity
 
 	private String displayName = "";
 
+	private float sizeScalar = 1f;
+	private float growthRatePow = 0.5f;
 	private float growthRate = 0.0005f;
 
 	private float currentLightValue = 0;
 
-	public Plant(GameCore gameCore, Vector2 location, WrapperTR... atlasLocations)
+	public Plant(World world, Vector2 location)
 	{
-		super(gameCore, location, new Vector2(32, 32), atlasLocations);
+		super(world, location, new Vector2(32, 32));
 	}
 
 	public void setDisplayName(String name)
@@ -60,22 +58,28 @@ public class Plant extends Entity
 		this.growthRate = growthRate;
 	}
 
+	public void setGrowthRatePow(float pow)
+	{
+		this.growthRatePow = pow;
+	}
+
 	@Override
 	public void update()
 	{
 		super.update();
 
-		this.size.add(growthRate, growthRate);
+		this.lifePointsAttribute.increaseMaxLP(growthRate);
+		this.updateSize();
 
-		currentLightValue = game.getCurrentLight();
+		currentLightValue = world.getCurrentLight();
 
-		lifePointsAttribute.update(this, game.getWeather());
-		lightAttribute.update(this, game.getWeather());
-		tempratureAttribute.update(this, game.getWeather());
-		waterAttribute.update(this, game.getWeather());
+		lifePointsAttribute.update(this, world.getWeather());
+		lightAttribute.update(this, world.getWeather());
+		tempratureAttribute.update(this, world.getWeather());
+		waterAttribute.update(this, world.getWeather());
 		for(NutrientAttribute attribute : nutrientAttributes)
 		{
-			attribute.update(this, game.getWeather());
+			attribute.update(this, world.getWeather());
 		}
 	}
 
@@ -98,12 +102,6 @@ public class Plant extends Entity
 	@Override
 	public void render(float delta)
 	{
-		if(getBoundingBox().contains(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()))
-		{
-			Renderer.drawCircle(location.x, location.y, 64, GameColors.VALID_AREA, true);
-			Renderer.drawCircle(location.x, location.y, 64, GameColors.VALID_AREA_NO_ALPHA, false);
-		}
-
 		for(WrapperTR region : regions)
 		{
 			if(region.hasTint())
@@ -117,14 +115,29 @@ public class Plant extends Entity
 		}
 	}
 
+	public void updateSize()
+	{
+		this.setSize(this.getSizeForMaxLP());
+	}
+
 	public void setSize(float size)
 	{
 		this.size.set(size, size);
 	}
 
-	public Item getSaplingItem()
+	public void setSizeScalar(float scalar)
 	{
-		return ItemRegistry.EMPTY;
+		this.sizeScalar = scalar;
+	}
+
+	public float getSizeScalar()
+	{
+		return this.sizeScalar;
+	}
+
+	public ItemStack getSaplingItem()
+	{
+		return ItemStack.EMPTY;
 	}
 
 	public LifePointsAttribute getLifePointsAttribute()
@@ -135,7 +148,7 @@ public class Plant extends Entity
 	public void setLifePointsAttribute(LifePointsAttribute lifePointsAttribute)
 	{
 		this.lifePointsAttribute = lifePointsAttribute;
-		this.setSize(Plant.getSizeForMaxLP(this.lifePointsAttribute.getMaxValue()));
+		this.updateSize();
 	}
 
 	public LightAttribute getLightAttribute()
@@ -193,27 +206,33 @@ public class Plant extends Entity
 	{
 		this.getLifePointsAttribute().setMaxValue(this.getLifePointsAttribute().getMaxValue() - GameValues.TRIM_COST);
 		this.getLifePointsAttribute().setCurrentValue(this.getLifePointsAttribute().getCurrentValue() - GameValues.TRIM_COST);
-		if(this.getLifePointsAttribute().getMaxValue() <= 0)
+
+		float currentHealth = this.getLifePointsAttribute().getCurrentValue();
+		float maxHealth = this.getLifePointsAttribute().getMaxValue();
+
+		if(currentHealth < 20)
 		{
-			this.kill();
-			return;
-		}
-		else if(this.getLifePointsAttribute().getMaxValue() < 20)
-		{
-			if(GameCore.rand.nextInt((int) this.getLifePointsAttribute().getMaxValue()) == 0)
+			if(currentHealth <= 0 || GameCore.rand.nextInt((int) maxHealth) == 0)
 			{
 				this.kill();
 				return;
 			}
 		}
 
-		if(this.getLifePointsAttribute().getMaxValue() < this.getLifePointsAttribute().getCurrentValue())
-			this.getLifePointsAttribute().setCurrentValue(this.getLifePointsAttribute().getMaxValue());
+		if(maxHealth < currentHealth)
+			this.getLifePointsAttribute().setCurrentValue(maxHealth);
 
-		System.out.println(size);
+		this.updateSize();
+	}
 
-		this.setSize(Plant.getSizeForMaxLP(this.getLifePointsAttribute().getMaxValue()));
+	public List<ItemStack> getHarvests()
+	{
+		return new ArrayList<>();
+	}
 
+	public List<ItemStack> getDrops()
+	{
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -223,8 +242,8 @@ public class Plant extends Entity
 		//LD46.SNACK_BAR.createSnackMessage("SEEMS THE PLANT DIDN'T SURVIVE THE TRIM", Color.RED);
 	}
 
-	public static float getSizeForMaxLP(float lp)
+	public float getSizeForMaxLP()
 	{
-		return (float) (Math.sqrt(lp) * GameValues.LP_TO_SIZE_SCALAR);
+		return (float) (Math.pow(this.lifePointsAttribute.getMaxValue(), growthRatePow) * this.sizeScalar);
 	}
 }

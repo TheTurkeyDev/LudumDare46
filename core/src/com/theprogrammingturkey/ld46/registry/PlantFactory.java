@@ -3,12 +3,11 @@ package com.theprogrammingturkey.ld46.registry;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.theprogrammingturkey.ld46.entity.tree.DeadTree;
-import com.theprogrammingturkey.ld46.entity.tree.OakTree;
 import com.theprogrammingturkey.ld46.entity.Plant;
 import com.theprogrammingturkey.ld46.entity.PlantType;
 import com.theprogrammingturkey.ld46.entity.attributes.LifePointsAttribute;
@@ -16,7 +15,13 @@ import com.theprogrammingturkey.ld46.entity.attributes.LightAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.NutrientAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.TempratureAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.WaterAttribute;
-import com.theprogrammingturkey.ld46.game.GameCore;
+import com.theprogrammingturkey.ld46.entity.tree.BonsaiTree;
+import com.theprogrammingturkey.ld46.entity.tree.Cactus;
+import com.theprogrammingturkey.ld46.entity.tree.CherryBlossomTree;
+import com.theprogrammingturkey.ld46.entity.tree.DeadTree;
+import com.theprogrammingturkey.ld46.entity.tree.OakTree;
+import com.theprogrammingturkey.ld46.game.World;
+import com.theprogrammingturkey.ld46.rendering.WrapperTR;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,19 +40,23 @@ public class PlantFactory
 		this.plantID = id;
 	}
 
-	public Plant create(GameCore gameCore, Vector2 loc)
+	public Plant create(World world, Vector2 loc, int maxHealth)
 	{
 		try
 		{
-
 			String id = type.getName() + "/" + plantID;
 			JsonObject json = plantsToJson.get(id);
-			Plant p = plantsToClasses.get(id).getDeclaredConstructor(GameCore.class, Vector2.class).newInstance(gameCore, loc.cpy());
+			Plant p = plantsToClasses.get(id).getDeclaredConstructor(World.class, Vector2.class).newInstance(world, loc.cpy());
+
 			p.setDisplayName(json.get("display").getAsString());
 			if(json.has("base_growth_speed"))
 				p.setGrowthRate(json.get("base_growth_speed").getAsFloat());
+			if(json.has("base_growth_pow"))
+				p.setGrowthRatePow(json.get("base_growth_pow").getAsFloat());
+			if(json.has("size_scalar"))
+				p.setSizeScalar(json.get("size_scalar").getAsFloat());
 
-			p.setLifePointsAttribute(new LifePointsAttribute());
+			p.setLifePointsAttribute(new LifePointsAttribute(maxHealth));
 
 			for(JsonElement element : json.getAsJsonArray("attributes"))
 			{
@@ -79,6 +88,21 @@ public class PlantFactory
 				}
 			}
 
+			for(JsonElement element : json.getAsJsonArray("textures"))
+			{
+				JsonObject texture = element.getAsJsonObject();
+				int width = texture.get("width").getAsInt();
+				int height = texture.get("height").getAsInt();
+				int x = texture.get("x").getAsInt() * width;
+				int y = texture.get("y").getAsInt() * height;
+				WrapperTR wrapperTR = new WrapperTR(x, y, width, height);
+
+				if(texture.has("base_tint"))
+					wrapperTR.setTint(Color.valueOf(texture.get("base_tint").getAsString()));
+
+				p.addTexture(wrapperTR);
+			}
+
 			return p;
 		} catch(Exception e)
 		{
@@ -93,6 +117,9 @@ public class PlantFactory
 	{
 		plantsToClasses.put("tree/oak", OakTree.class);
 		plantsToClasses.put("tree/dead", DeadTree.class);
+		plantsToClasses.put("tree/bonsai", BonsaiTree.class);
+		plantsToClasses.put("tree/cactus", Cactus.class);
+		plantsToClasses.put("tree/cherry_blossom", CherryBlossomTree.class);
 
 
 		FileHandle f = Gdx.files.internal("plants/");

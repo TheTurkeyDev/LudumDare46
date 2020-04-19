@@ -1,0 +1,10 @@
+{
+  "id": "stick",
+  "display_name": "Stick",
+  "texture": {
+    "x": 11,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

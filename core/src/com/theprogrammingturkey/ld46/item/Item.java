@@ -1,6 +1,8 @@
 package com.theprogrammingturkey.ld46.item;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.theprogrammingturkey.ld46.game.World;
 
 public class Item
 {
@@ -39,11 +41,21 @@ public class Item
 		this.textureRegion = textureRegion;
 	}
 
+	public boolean isPlaceable()
+	{
+		return false;
+	}
+
+	public void onPlace(World world, Vector2 vec)
+	{
+
+	}
+
 	@Override
 	public String toString()
 	{
 		if(displayName == null)
-			return "N/A";
+			return "EMPTY";
 		return displayName;
 	}
 }

@@ -1,0 +1,10 @@
+{
+  "id": "log",
+  "display_name": "Log",
+  "texture": {
+    "x": 12,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

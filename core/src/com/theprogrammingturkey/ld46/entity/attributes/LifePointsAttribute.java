@@ -2,6 +2,7 @@ package com.theprogrammingturkey.ld46.entity.attributes;
 
 import com.badlogic.gdx.graphics.Color;
 import com.theprogrammingturkey.ld46.entity.Plant;
+import com.theprogrammingturkey.ld46.game.GameValues;
 import com.theprogrammingturkey.ld46.game.Weather;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.util.StringUtil;
@@ -9,14 +10,15 @@ import com.theprogrammingturkey.ld46.util.StringUtil;
 public class LifePointsAttribute extends Attribute
 {
 
-	public LifePointsAttribute()
+	public LifePointsAttribute(float mexHealth)
 	{
-		super(100, 0, 100);
+		super(mexHealth, 0, mexHealth);
 	}
 
 	@Override
 	public void update(Plant plant, Weather weather)
 	{
+		currentValue += GameValues.LP_GAIN;
 		WaterAttribute water = plant.getWaterAttribute();
 		if(water.currentValue < (water.getMaxValue() - water.getMinValue()) / 4)
 		{
@@ -36,8 +38,15 @@ public class LifePointsAttribute extends Attribute
 		}
 	}
 
+	public void increaseMaxLP(float amount)
+	{
+		this.setMaxValue(this.getMaxValue() + amount);
+	}
+
 	public void renderAsInfoGraphic(float delta, int x, int y)
 	{
-		Renderer.drawString(Renderer.font, x + 25, y, "LIFE POINTS: " + StringUtil.formatDecimal(getCurrentValue()), 1f, Color.BLACK);
+		String currHealth = StringUtil.formatDecimal(getCurrentValue());
+		String maxHealth = StringUtil.formatDecimal(getMaxValue());
+		Renderer.drawString(Renderer.font, x + 25, y, "LIFE POINTS: " + currHealth + " / " + maxHealth, 1f, Color.BLACK);
 	}
 }

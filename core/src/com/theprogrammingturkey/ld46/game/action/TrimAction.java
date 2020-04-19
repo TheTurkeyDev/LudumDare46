@@ -2,6 +2,7 @@ package com.theprogrammingturkey.ld46.game.action;
 
 import com.theprogrammingturkey.ld46.entity.Plant;
 import com.theprogrammingturkey.ld46.entity.Player;
+import com.theprogrammingturkey.ld46.sounds.SoundManager;
 
 public class TrimAction extends Action
 {
@@ -9,8 +10,9 @@ public class TrimAction extends Action
 	{
 		super("Trim", () ->
 		{
-			player.getInventory().addToInventory(plant.getSaplingItem(), 1);
+			player.getInventory().addToInventory(plant.getSaplingItem());
 			plant.trim();
+			SoundManager.playRandomSnip();
 		});
 	}
 }

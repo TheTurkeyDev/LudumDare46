@@ -1,59 +1,65 @@
 package com.theprogrammingturkey.ld46.inventory;
 
-import com.theprogrammingturkey.ld46.item.Item;
-import com.theprogrammingturkey.ld46.registry.ItemRegistry;
+import com.theprogrammingturkey.ld46.item.ItemStack;
 
 public class Slot
 {
-	private Item item = ItemRegistry.EMPTY;
-	private int amount = 0;
+	private ItemStack stack = ItemStack.EMPTY;
 
 	public Slot()
 	{
 
 	}
 
-	public boolean addItemToSlot(Item item, int count)
+	public boolean addItemToSlot(ItemStack stack)
 	{
-		if(this.item == ItemRegistry.EMPTY)
+		if(this.stack == ItemStack.EMPTY)
 		{
-			this.item = item;
-			amount = count;
+			this.stack = stack;
 			return true;
 		}
-		else if(this.item == item)
+		else if(this.stack.equals(stack))
 		{
-			amount += count;
+			this.stack.inc(stack.getAmount());
+			stack.setAmount(0);
 			return true;
 		}
 		return false;
 	}
 
-	public int removeFromSlot(Item item, int count)
+	public ItemStack removeFromSlot(int count)
 	{
-		if(this.item == item && amount > 0)
+		ItemStack removed = ItemStack.EMPTY;
+		if(this.stack != ItemStack.EMPTY)
 		{
-			amount -= Math.max(amount, count);
-			if(amount == 0)
-				this.item = ItemRegistry.EMPTY;
-			return Math.max(amount, count);
+			removed = new ItemStack(this.stack.getItem());
+			int removeAmt = Math.min(this.stack.getAmount(), count);
+			removed.setAmount(removeAmt);
+			this.stack.dec(removeAmt);
+			if(this.stack.getAmount() == 0)
+				this.stack = ItemStack.EMPTY;
 		}
-		return count;
+		return removed;
 	}
 
-	public Item getItem()
+	public void decrementSlotCount()
 	{
-		return item;
+		if(this.stack != ItemStack.EMPTY && this.stack.getAmount() > 0)
+		{
+			this.stack.dec(1);
+			if(this.stack.getAmount() == 0)
+				this.stack = ItemStack.EMPTY;
+		}
 	}
 
-	public int getAmount()
+	public ItemStack getStack()
 	{
-		return amount;
+		return stack;
 	}
 
 	@Override
 	public String toString()
 	{
-		return item.toString() + "/" + amount;
+		return stack.toString();
 	}
 }

@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.theprogrammingturkey.ld46.entity.state.PlayerState;
-import com.theprogrammingturkey.ld46.game.GameCore;
+import com.theprogrammingturkey.ld46.game.World;
 import com.theprogrammingturkey.ld46.inventory.Inventory;
+import com.theprogrammingturkey.ld46.inventory.Slot;
+import com.theprogrammingturkey.ld46.registry.ItemRegistry;
 import com.theprogrammingturkey.ld46.rendering.Animation;
 import com.theprogrammingturkey.ld46.rendering.GameColors;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
@@ -25,11 +27,13 @@ public class Player extends Entity
 
 	public PlayerState state = PlayerState.NONE;
 
+	private int currentSlot = 0;
 	public Inventory inventory = new Inventory(25);
 
-	public Player(GameCore gameCore, Vector2 location)
+	public Player(World world, Vector2 location)
 	{
-		super(gameCore, location, new Vector2(64, 64), new WrapperTR(64, 0));
+		super(world, location, new Vector2(64, 64));
+		super.addTexture(new WrapperTR(64, 0));
 
 		TextureRegion[] leftTextures = new TextureRegion[5];
 		TextureRegion[] rightTextures = new TextureRegion[5];
@@ -49,6 +53,11 @@ public class Player extends Entity
 		animations[3] = new Animation(10, true, rightTextures);
 
 		currentAnimation = animations[0];
+
+		inventory.addToInventory(ItemRegistry.getItemStack("oak"));
+		inventory.addToInventory(ItemRegistry.getItemStack("bonsai"));
+		inventory.addToInventory(ItemRegistry.getItemStack("cactus"));
+		inventory.addToInventory(ItemRegistry.getItemStack("cherry_blossom"));
 	}
 
 	public void update()
@@ -113,6 +122,25 @@ public class Player extends Entity
 	public Inventory getInventory()
 	{
 		return this.inventory;
+	}
+
+	public void adjCurrentSlotIndex(int amount)
+	{
+		this.currentSlot += amount;
+		if(this.currentSlot < 0)
+			this.currentSlot += 5;
+
+		this.currentSlot %= 5;
+	}
+
+	public int getCurrentSlotIndex()
+	{
+		return currentSlot;
+	}
+
+	public Slot getCurrentSlot()
+	{
+		return this.inventory.getSlot(currentSlot);
 	}
 
 	public void stop()

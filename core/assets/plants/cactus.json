@@ -1,0 +1,39 @@
+{
+  "id": "cactus",
+  "type": "tree",
+  "display": "Cactus",
+  "base_growth_pow": 0.3333333,
+  "base_growth_speed": 0.005,
+  "size_scalar": 20,
+  "attributes": [
+    {
+      "name": "water",
+      "base": 10,
+      "decay": 0.00005
+    },
+    {
+      "name": "light",
+      "base": 100
+    },
+    {
+      "name": "temperature",
+      "min": 10,
+      "max": 90
+    }
+  ],
+  "textures": [
+    {
+      "x": 13,
+      "y": 0,
+      "width": 64,
+      "height": 64,
+      "base_tint": "#237543ff"
+    },
+    {
+      "x": 14,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    }
+  ]
+}

@@ -7,7 +7,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.theprogrammingturkey.ld46.item.Item;
-import com.theprogrammingturkey.ld46.rendering.Renderer;
+import com.theprogrammingturkey.ld46.item.ItemSapling;
+import com.theprogrammingturkey.ld46.item.ItemStack;
 import com.theprogrammingturkey.ld46.rendering.Textures;
 
 import java.util.HashMap;
@@ -15,26 +16,40 @@ import java.util.Map;
 
 public class ItemRegistry
 {
-	public static final Item EMPTY = new Item("empty");
 	private static Map<String, Item> items = new HashMap<>();
 
 	public static void registerItems()
 	{
-		loadItem(new Item("bonsai"));
-		loadItem(new Item("cactus"));
-		loadItem(new Item("cherry_blossom"));
-		loadItem(new Item("elm"));
-		loadItem(new Item("iucca"));
-		loadItem(new Item("jade"));
-		loadItem(new Item("oak"));
-		loadItem(new Item("peace_lily"));
-		loadItem(new Item("pine"));
-		loadItem(new Item("rotala"));
+		loadItem(new ItemSapling("bonsai"));
+		loadItem(new ItemSapling("cactus"));
+		loadItem(new ItemSapling("cherry_blossom"));
+		loadItem(new ItemSapling("elm"));
+		loadItem(new ItemSapling("iucca"));
+		loadItem(new ItemSapling("jade"));
+		loadItem(new ItemSapling("oak"));
+		loadItem(new ItemSapling("peace_lily"));
+		loadItem(new ItemSapling("pine"));
+		loadItem(new ItemSapling("rotala"));
+		loadItem(new Item("stick"));
+		loadItem(new Item("log"));
 	}
 
 	public static Item getItem(String id)
 	{
-		return items.getOrDefault(id, EMPTY);
+		return items.getOrDefault(id, null);
+	}
+
+	public static ItemStack getItemStack(String id)
+	{
+		return getItemStack(id, 1);
+	}
+
+	public static ItemStack getItemStack(String id, int count)
+	{
+		Item i = getItem(id);
+		if(i == null)
+			return ItemStack.EMPTY;
+		return new ItemStack(i, count);
 	}
 
 	public static void loadItem(Item item)

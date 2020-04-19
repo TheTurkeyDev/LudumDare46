@@ -84,7 +84,7 @@ public class Renderer
 		f.draw(batch, str, x, y);
 	}
 
-	public static void drawStringAligned(BitmapFont f, float x, float y, String str, float scale, int align, Color color)
+	public static float drawStringAligned(BitmapFont f, float x, float y, String str, float scale, int align, Color color)
 	{
 		f.getData().setScale(scale);
 		glyphLayout.setText(f, str, color, 0, align, false);
@@ -99,6 +99,7 @@ public class Renderer
 			drawX = x - glyphLayout.width;
 		}
 		f.draw(batch, str, drawX, y + (glyphLayout.height / 2));
+		return glyphLayout.width;
 	}
 
 
@@ -108,7 +109,7 @@ public class Renderer
 		glyphLayout.setText(f, str, color, 0, Align.center, false);
 		f.setColor(color);
 		Renderer.drawRect(x - (glyphLayout.width / 2) - 30, y - (glyphLayout.height / 2) - 10, glyphLayout.width + 60, glyphLayout.height + 20, GameColors.TEXT_ALPHA_BG, true);
-		font.draw(batch, str, x - (glyphLayout.width / 2), y + (glyphLayout.height / 2));
+		f.draw(batch, str, x - (glyphLayout.width / 2), y + (glyphLayout.height / 2));
 	}
 
 	public static void drawRect(float x, float y, float width, float height, Color color, boolean filled)

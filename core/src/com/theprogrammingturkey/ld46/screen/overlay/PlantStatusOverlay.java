@@ -8,17 +8,21 @@ import com.badlogic.gdx.utils.Align;
 import com.theprogrammingturkey.ld46.entity.Plant;
 import com.theprogrammingturkey.ld46.entity.attributes.NutrientAttribute;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
+import com.theprogrammingturkey.ld46.rendering.Textures;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
 
 public class PlantStatusOverlay extends Overlay
 {
 	private Plant plant;
 
-	private int x = 5;
-	private int y = 5;
+	private int x;
+	private int y;
 	private float width;
 	private float height;
 	private float top;
+
+	private float arrowBounce = 0;
+	private float arrowBounceInc = -1.5f;
 
 	public PlantStatusOverlay(Plant p, GameScreen screen, Overlay parent)
 	{
@@ -44,11 +48,18 @@ public class PlantStatusOverlay extends Overlay
 
 	public void render(float delta)
 	{
-		Renderer.drawRect(x, y, width, height, Color.LIGHT_GRAY, true);
-		Renderer.drawStringAligned(Renderer.font, x + (width / 2f), top - 30, plant.getDisplayName().toUpperCase(), 2f, Align.center, Color.BLACK);
+		Rectangle plantBB = plant.getBoundingBox();
+		Renderer.draw(Textures.arrow, plantBB.x + (plantBB.width / 2) - 32, arrowBounce + plantBB.y + plantBB.height, 64, 64);
 
-		plant.renderPreview(delta, x + (width / 2f) - 250, top - 70, 64, 64);
-		plant.renderPreview(delta, x + (width / 2f) + 186, top - 70, 64, 64);
+		arrowBounce += arrowBounceInc;
+		if(arrowBounce > 20 || arrowBounce < -20)
+			arrowBounceInc *= -1;
+
+		Renderer.drawRect(x, y, width, height, Color.LIGHT_GRAY, true);
+		float textWidth = Renderer.drawStringAligned(Renderer.font, x + (width / 2f), top - 30, plant.getDisplayName().toUpperCase(), 2f, Align.center, Color.BLACK);
+
+		plant.renderPreview(delta, x + (width / 2f) - (textWidth / 2) - 82, top - 70, 64, 64);
+		plant.renderPreview(delta, x + (width / 2f) + (textWidth / 2) + 20, top - 70, 64, 64);
 
 		float yInc = top - 90;
 		plant.getLifePointsAttribute().renderAsInfoGraphic(delta, x + 30, (int) yInc);
@@ -74,6 +85,15 @@ public class PlantStatusOverlay extends Overlay
 			return true;
 		}
 		return false;
+	}
+
+	public boolean touchDown(int screenX, int screenY, int pointer, int button)
+	{
+		Rectangle rect = new Rectangle(x, y, width, height);
+		if(!rect.contains(screenX, Gdx.graphics.getHeight() - screenY))
+			close();
+
+		return true;
 	}
 
 }

@@ -1,20 +1,17 @@
 package com.theprogrammingturkey.ld46.entity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.theprogrammingturkey.ld46.game.GameCore;
-import com.theprogrammingturkey.ld46.rendering.GameColors;
+import com.theprogrammingturkey.ld46.game.World;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.WrapperTR;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Entity
 {
-	protected GameCore game;
+	protected World world;
 	protected Vector2 location;
 	protected Vector2 size;
 
@@ -22,12 +19,16 @@ public class Entity
 
 	protected List<WrapperTR> regions = new ArrayList<>();
 
-	public Entity(GameCore game, Vector2 location, Vector2 size, WrapperTR... atlasLocs)
+	public Entity(World world, Vector2 location, Vector2 size)
 	{
-		this.game = game;
+		this.world = world;
 		this.location = location;
 		this.size = size;
-		Collections.addAll(regions, atlasLocs);
+	}
+
+	public void addTexture(WrapperTR wrapperTR)
+	{
+		regions.add(wrapperTR);
 	}
 
 	public void update()
@@ -37,12 +38,6 @@ public class Entity
 
 	public void render(float delta)
 	{
-		if(getBoundingBox().contains(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()))
-		{
-			Renderer.drawCircle(location.x + (size.x / 2), location.y + (size.y / 2), 64, GameColors.VALID_AREA, true);
-			Renderer.drawCircle(location.x + (size.x / 2), location.y + (size.y / 2), 64, GameColors.VALID_AREA_NO_ALPHA, false);
-		}
-
 		for(WrapperTR region : regions)
 		{
 			if(region.hasTint())
@@ -72,6 +67,11 @@ public class Entity
 	}
 
 	public void kill()
+	{
+		this.dead = true;
+	}
+
+	public void remove()
 	{
 		this.dead = true;
 	}

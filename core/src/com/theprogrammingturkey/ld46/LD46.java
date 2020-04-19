@@ -8,6 +8,7 @@ import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.SnackBar;
 import com.theprogrammingturkey.ld46.rendering.Textures;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
+import com.theprogrammingturkey.ld46.sounds.SoundManager;
 
 public class LD46 extends Game
 {
@@ -24,6 +25,7 @@ public class LD46 extends Game
 		Renderer.init();
 		Textures.init();
 		ItemRegistry.registerItems();
+		SoundManager.initSounds();
 		super.setScreen(new GameScreen());
 	}
 
@@ -51,5 +53,6 @@ public class LD46 extends Game
 	{
 		Renderer.dispose();
 		Textures.dispose();
+		SoundManager.disposeSounds();
 	}
 }
