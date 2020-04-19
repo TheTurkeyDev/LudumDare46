@@ -1,14 +1,20 @@
 package com.theprogrammingturkey.ld46.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.theprogrammingturkey.ld46.entity.attributes.Attribute;
+import com.theprogrammingturkey.ld46.LD46;
 import com.theprogrammingturkey.ld46.entity.attributes.LifePointsAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.LightAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.NutrientAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.TempratureAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.WaterAttribute;
 import com.theprogrammingturkey.ld46.game.GameCore;
+import com.theprogrammingturkey.ld46.game.GameValues;
+import com.theprogrammingturkey.ld46.item.Item;
+import com.theprogrammingturkey.ld46.registry.ItemRegistry;
+import com.theprogrammingturkey.ld46.rendering.GameColors;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.WrapperTR;
 
@@ -92,6 +98,12 @@ public class Plant extends Entity
 	@Override
 	public void render(float delta)
 	{
+		if(getBoundingBox().contains(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()))
+		{
+			Renderer.drawCircle(location.x, location.y, 64, GameColors.VALID_AREA, true);
+			Renderer.drawCircle(location.x, location.y, 64, GameColors.VALID_AREA_NO_ALPHA, false);
+		}
+
 		for(WrapperTR region : regions)
 		{
 			if(region.hasTint())
@@ -110,6 +122,11 @@ public class Plant extends Entity
 		this.size.set(size, size);
 	}
 
+	public Item getSaplingItem()
+	{
+		return ItemRegistry.EMPTY;
+	}
+
 	public LifePointsAttribute getLifePointsAttribute()
 	{
 		return lifePointsAttribute;
@@ -118,6 +135,7 @@ public class Plant extends Entity
 	public void setLifePointsAttribute(LifePointsAttribute lifePointsAttribute)
 	{
 		this.lifePointsAttribute = lifePointsAttribute;
+		this.setSize(Plant.getSizeForMaxLP(this.lifePointsAttribute.getMaxValue()));
 	}
 
 	public LightAttribute getLightAttribute()
@@ -169,5 +187,44 @@ public class Plant extends Entity
 	public float getCurrentLightValue()
 	{
 		return this.currentLightValue;
+	}
+
+	public void trim()
+	{
+		this.getLifePointsAttribute().setMaxValue(this.getLifePointsAttribute().getMaxValue() - GameValues.TRIM_COST);
+		this.getLifePointsAttribute().setCurrentValue(this.getLifePointsAttribute().getCurrentValue() - GameValues.TRIM_COST);
+		if(this.getLifePointsAttribute().getMaxValue() <= 0)
+		{
+			this.kill();
+			return;
+		}
+		else if(this.getLifePointsAttribute().getMaxValue() < 20)
+		{
+			if(GameCore.rand.nextInt((int) this.getLifePointsAttribute().getMaxValue()) == 0)
+			{
+				this.kill();
+				return;
+			}
+		}
+
+		if(this.getLifePointsAttribute().getMaxValue() < this.getLifePointsAttribute().getCurrentValue())
+			this.getLifePointsAttribute().setCurrentValue(this.getLifePointsAttribute().getMaxValue());
+
+		System.out.println(size);
+
+		this.setSize(Plant.getSizeForMaxLP(this.getLifePointsAttribute().getMaxValue()));
+
+	}
+
+	@Override
+	public void kill()
+	{
+		super.kill();
+		//LD46.SNACK_BAR.createSnackMessage("SEEMS THE PLANT DIDN'T SURVIVE THE TRIM", Color.RED);
+	}
+
+	public static float getSizeForMaxLP(float lp)
+	{
+		return (float) (Math.sqrt(lp) * GameValues.LP_TO_SIZE_SCALAR);
 	}
 }

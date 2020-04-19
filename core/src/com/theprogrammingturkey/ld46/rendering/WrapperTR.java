@@ -24,7 +24,7 @@ public class WrapperTR
 		this.width = 64;
 		this.height = 64;
 		this.tint = tint;
-		this.region = new TextureRegion(Renderer.atlas, x, y, width, height);
+		this.region = new TextureRegion(Textures.atlas, x, y, width, height);
 	}
 
 	public int getX()

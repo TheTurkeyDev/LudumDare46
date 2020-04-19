@@ -1,6 +1,7 @@
 package com.theprogrammingturkey.ld46.screen.overlay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
@@ -64,4 +65,15 @@ public class PlantStatusOverlay extends Overlay
 			nutrientAttribute.renderAsInfoGraphic(delta, x + 30, (int) yInc);
 		}
 	}
+
+	public boolean keyDown(int keycode)
+	{
+		if(keycode == Input.Keys.ESCAPE)
+		{
+			close();
+			return true;
+		}
+		return false;
+	}
+
 }

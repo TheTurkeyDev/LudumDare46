@@ -9,6 +9,7 @@ import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ActionsOverlay extends Overlay
@@ -19,14 +20,12 @@ public class ActionsOverlay extends Overlay
 	private float centerX;
 	private float centerY;
 
-	public ActionsOverlay(Plant plant, GameScreen screen, Overlay parent)
+	public ActionsOverlay(Plant plant, GameScreen screen, Overlay parent, Action... actions)
 	{
 		super(screen, parent);
 		this.plant = plant;
-		actions.add(new Action("Water", () -> System.out.println("Water!")));
-		actions.add(new Action("Trim", () -> System.out.println("Trim!")));
-		actions.add(new Action("Chop", () -> System.out.println("Chop!")));
-		actions.add(new Action("Gather", () -> System.out.println("Gather!")));
+
+		this.actions = Arrays.asList(actions);
 
 		centerX = plant.getLocation().x;
 		centerY = plant.getLocation().y + (plant.getSize().y / 2);
@@ -46,6 +45,7 @@ public class ActionsOverlay extends Overlay
 
 			int index = (int) (mouseRad / radiamInc);
 			actions.get(index).onClick();
+			close();
 
 			return true;
 		}

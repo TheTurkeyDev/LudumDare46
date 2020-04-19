@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SnackBar
 {
-	public static final int DISPLAY_HEIGHT = 60;
+	public static final int DISPLAY_HEIGHT = 125;
 
 	private List<SnackText> messages = new ArrayList<>();
 

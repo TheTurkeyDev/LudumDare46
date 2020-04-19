@@ -8,27 +8,37 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.theprogrammingturkey.ld46.LD46;
+import com.theprogrammingturkey.ld46.entity.Entity;
+import com.theprogrammingturkey.ld46.entity.Market;
 import com.theprogrammingturkey.ld46.entity.Plant;
 import com.theprogrammingturkey.ld46.entity.PlantType;
 import com.theprogrammingturkey.ld46.entity.Player;
 import com.theprogrammingturkey.ld46.entity.state.PlayerState;
+import com.theprogrammingturkey.ld46.game.action.Action;
+import com.theprogrammingturkey.ld46.game.action.TrimAction;
 import com.theprogrammingturkey.ld46.registry.PlantFactory;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.Textures;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
 import com.theprogrammingturkey.ld46.screen.overlay.ActionsOverlay;
+import com.theprogrammingturkey.ld46.screen.overlay.InventoryExtensionOverlay;
 import com.theprogrammingturkey.ld46.screen.overlay.PlantStatusOverlay;
 import com.theprogrammingturkey.ld46.util.Direction;
 import com.theprogrammingturkey.ld46.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameCore
 {
+	public static final Random rand = new Random();
+
 	private Player thePlayer;
 
 	private List<Plant> plantList = new ArrayList<>();
+
+	private List<Entity> entityList = new ArrayList<>();
 
 	private GameScreen screen;
 
@@ -53,8 +63,9 @@ public class GameCore
 		Plant plant = factory.create(this, new Vector2(400, 400));
 		plant.getLifePointsAttribute().setMaxValue(100);
 		plant.getLifePointsAttribute().setCurrentValue(100);
-		plant.setSize(150f);
 		plantList.add(plant);
+
+		entityList.add(new Market(this, new Vector2(50, 50)));
 	}
 
 	public void update()
@@ -69,11 +80,17 @@ public class GameCore
 
 		thePlayer.update();
 
-		for(Plant plant : plantList)
+		for(int i = plantList.size() - 1; i >= 0; i--)
 		{
-			plant.update();
+			Plant p = plantList.get(i);
+			p.update();
+			if(p.isDead())
+				plantList.remove(i);
 			//TODO: Deal with overlaps/ shadows
 		}
+
+		for(Entity ent : entityList)
+			ent.update();
 	}
 
 	public void render(float delta)
@@ -126,9 +143,10 @@ public class GameCore
 		Renderer.drawStringAligned(Renderer.rust, cx, cy - 90, "Temp: " + StringUtil.formatDecimal(weather.getTemp()), .2f, Align.center, Color.WHITE);
 
 		for(Plant plant : plantList)
-		{
 			plant.render(delta);
-		}
+
+		for(Entity ent : entityList)
+			ent.render(delta);
 
 		thePlayer.render(delta);
 	}
@@ -145,16 +163,18 @@ public class GameCore
 
 	public boolean keyDown(int keycode)
 	{
-		if(keycode == Input.Keys.SPACE)
-		{
-			if(thePlayer.getState() == PlayerState.NONE)
-				thePlayer.setState(PlayerState.PLACING);
-		}
-		else if(keycode == Input.Keys.E)
+		if(keycode == Input.Keys.E)
 		{
 			if(screen.getCurrentOverlay() != null)
 				screen.getCurrentOverlay().close();
+			else
+				screen.setCurrentOverlay(new InventoryExtensionOverlay(screen, null, thePlayer));
 		}
+//		else if(keycode == Input.Keys.SPACE)
+//		{
+//			if(thePlayer.getState() == PlayerState.NONE)
+//				thePlayer.setState(PlayerState.PLACING);
+//		}
 
 		if(keycode == Input.Keys.W)
 		{
@@ -206,7 +226,7 @@ public class GameCore
 			{
 				PlantFactory factory = new PlantFactory(PlantType.TREE, "oak");
 				Plant p = factory.create(this, new Vector2(screenX, yFlip));
-				plantList.add(p);
+				spawnPlant(p);
 				thePlayer.setState(PlayerState.NONE);
 				return true;
 			}
@@ -216,23 +236,69 @@ public class GameCore
 			}
 		}
 
+		Vector2 playercenter = thePlayer.getLocation().cpy().add(thePlayer.getSize().x / 2, 0);
+		Vector2 entCenter = new Vector2();
 		for(Plant plant : plantList)
 		{
 			Rectangle rect = plant.getBoundingBox();
 			if(rect.contains(screenX, yFlip))
 			{
-				if(button == 0)
+				if(rect.getPosition(entCenter).add(rect.getWidth() / 2, 0).dst(playercenter) < 64)
 				{
-					screen.setCurrentOverlay(new PlantStatusOverlay(plant, screen, null));
-					return true;
+					if(button == 0)
+					{
+
+						screen.setCurrentOverlay(new PlantStatusOverlay(plant, screen, null));
+						return true;
+					}
+					else if(button == 1)
+					{
+						screen.setCurrentOverlay(new ActionsOverlay(plant, screen, null,
+								new Action("Water", () -> System.out.println("Water!")),
+								new TrimAction(plant, thePlayer),
+								new Action("Chop", () -> System.out.println("Chop!")),
+								new Action("Gather", () -> System.out.println("Gather!"))
+						));
+						return true;
+					}
 				}
-				else if(button == 1)
+				else
 				{
-					screen.setCurrentOverlay(new ActionsOverlay(plant, screen, null));
-					return true;
+					LD46.SNACK_BAR.createSnackMessage("TOO FAR AWAY", Color.RED);
 				}
 			}
 		}
+
+		for(Entity entity : entityList)
+		{
+			Rectangle rect = entity.getBoundingBox();
+			if(rect.contains(screenX, yFlip))
+			{
+				if(rect.getPosition(entCenter).add(rect.getWidth() / 2, 0).dst(playercenter) < 64)
+				{
+					if(button == 1)
+					{
+						System.out.println("Market!");
+						return true;
+					}
+				}
+				else
+				{
+					LD46.SNACK_BAR.createSnackMessage("TOO FAR AWAY", Color.RED);
+				}
+			}
+		}
+
 		return false;
+	}
+
+	public void spawnPlant(Plant p)
+	{
+		plantList.add(p);
+	}
+
+	public Player getPlayer()
+	{
+		return thePlayer;
 	}
 }

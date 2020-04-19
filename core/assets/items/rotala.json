@@ -1,0 +1,10 @@
+{
+  "id": "rotala",
+  "display_name": "Rotala Sapling",
+  "texture": {
+    "x": 2,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

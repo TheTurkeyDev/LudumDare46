@@ -7,7 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.theprogrammingturkey.ld46.entity.OakTree;
+import com.theprogrammingturkey.ld46.entity.tree.DeadTree;
+import com.theprogrammingturkey.ld46.entity.tree.OakTree;
 import com.theprogrammingturkey.ld46.entity.Plant;
 import com.theprogrammingturkey.ld46.entity.PlantType;
 import com.theprogrammingturkey.ld46.entity.attributes.LifePointsAttribute;
@@ -91,6 +92,7 @@ public class PlantFactory
 	public static void loadPlants()
 	{
 		plantsToClasses.put("tree/oak", OakTree.class);
+		plantsToClasses.put("tree/dead", DeadTree.class);
 
 
 		FileHandle f = Gdx.files.internal("plants/");

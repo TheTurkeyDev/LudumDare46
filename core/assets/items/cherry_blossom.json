@@ -1,0 +1,10 @@
+{
+  "id": "cherry_blossom",
+  "display_name": "Cherry Blossom Sapling",
+  "texture": {
+    "x": 5,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

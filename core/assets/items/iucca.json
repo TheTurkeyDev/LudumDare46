@@ -1,0 +1,10 @@
+{
+  "id": "iucca",
+  "display_name": "Iucca Sapling",
+  "texture": {
+    "x": 9,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

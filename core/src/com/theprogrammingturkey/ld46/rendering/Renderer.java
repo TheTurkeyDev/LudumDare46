@@ -23,8 +23,6 @@ public class Renderer
 	public static BitmapFont rust;
 	private static GlyphLayout glyphLayout = new GlyphLayout();
 
-	public static Texture atlas;
-
 
 	public static void init()
 	{
@@ -36,7 +34,6 @@ public class Renderer
 
 		font = new BitmapFont(Gdx.files.internal("fonts/test.fnt"), false);
 		rust = new BitmapFont(Gdx.files.internal("fonts/rust.fnt"), false);
-		atlas = new Texture("textures/spritesheet.png");
 	}
 
 	public static void update()
@@ -197,6 +194,5 @@ public class Renderer
 		batch.dispose();
 		shape.dispose();
 		font.dispose();
-		atlas.dispose();
 	}
 }

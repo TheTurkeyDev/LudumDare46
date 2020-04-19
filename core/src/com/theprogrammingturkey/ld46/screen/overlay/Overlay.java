@@ -5,7 +5,7 @@ import com.theprogrammingturkey.ld46.screen.GameScreen;
 public class Overlay
 {
 	private Overlay parent;
-	private GameScreen screen;
+	protected GameScreen screen;
 
 	public Overlay(GameScreen screen, Overlay parent)
 	{
@@ -21,6 +21,16 @@ public class Overlay
 	public void close()
 	{
 		screen.setCurrentOverlay(parent);
+	}
+
+	public boolean keyDown(int keycode)
+	{
+		return false;
+	}
+
+	public boolean keyUp(int keycode)
+	{
+		return false;
 	}
 
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)

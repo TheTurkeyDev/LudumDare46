@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.theprogrammingturkey.ld46.entity.state.PlayerState;
 import com.theprogrammingturkey.ld46.game.GameCore;
+import com.theprogrammingturkey.ld46.inventory.Inventory;
 import com.theprogrammingturkey.ld46.rendering.Animation;
 import com.theprogrammingturkey.ld46.rendering.GameColors;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
+import com.theprogrammingturkey.ld46.rendering.Textures;
 import com.theprogrammingturkey.ld46.rendering.WrapperTR;
 import com.theprogrammingturkey.ld46.util.Direction;
 
@@ -18,33 +20,35 @@ public class Player extends Entity
 
 	// W/A/S/D
 	public boolean[] moveKeys = new boolean[4];
+	private Animation[] animations = new Animation[4];
 	private Animation currentAnimation;
-	private Animation frontAnimation;
 
 	public PlayerState state = PlayerState.NONE;
+
+	public Inventory inventory = new Inventory(25);
 
 	public Player(GameCore gameCore, Vector2 location)
 	{
 		super(gameCore, location, new Vector2(64, 64), new WrapperTR(64, 0));
 
-		//TextureRegion[] leftTextures = new TextureRegion[5];
-		//TextureRegion[] rightTextures = new TextureRegion[5];
+		TextureRegion[] leftTextures = new TextureRegion[5];
+		TextureRegion[] rightTextures = new TextureRegion[5];
 		TextureRegion[] frontTextures = new TextureRegion[4];
-		//TextureRegion[] backTextures = new TextureRegion[5];
+		TextureRegion[] backTextures = new TextureRegion[5];
 		for(int i = 0; i < 4; i++)
 		{
-			//leftTextures[i - 1] = new TextureRegion("textures/player/playerLeft" + i + ".png");
-			//rightTextures[i - 1] = new TextureRegion("textures/player/playerRight" + i + ".png");
-			frontTextures[i] = new TextureRegion(Renderer.atlas, 64 * i, 64, 64, 64);
-			//backTextures[i - 1] = new TextureRegion("textures/player/playerBack" + i + ".png");
+			leftTextures[i] = new TextureRegion(Textures.atlas, 64 * (8 + i), 64, 64, 64);
+			rightTextures[i] = new TextureRegion(Textures.atlas, 64 * (4 + i), 64, 64, 64);
+			frontTextures[i] = new TextureRegion(Textures.atlas, 64 * i, 64, 64, 64);
+			backTextures[i] = new TextureRegion(Textures.atlas, 64 * (12 + i), 64, 64, 64);
 		}
 
-		//leftAnimation = new Animation(10, true, leftTextures);
-		//rightAnimation = new Animation(10, true, rightTextures);
-		frontAnimation = new Animation(10, true, frontTextures);
-		//backAnimation = new Animation(10, true, backTextures);
+		animations[0] = new Animation(10, true, backTextures);
+		animations[1] = new Animation(10, true, leftTextures);
+		animations[2] = new Animation(10, true, frontTextures);
+		animations[3] = new Animation(10, true, rightTextures);
 
-		currentAnimation = frontAnimation;
+		currentAnimation = animations[0];
 	}
 
 	public void update()
@@ -56,6 +60,7 @@ public class Player extends Entity
 		{
 			if(moveKeys[d.getVal()])
 			{
+				currentAnimation = animations[d.getVal()];
 				currentAnimation.setMoving(true);
 				d.addToLoc(location, MOVE_SPEED);
 			}
@@ -103,5 +108,19 @@ public class Player extends Entity
 		float dx = centerX - x;
 		float dy = centerY - y;
 		return dx * dx + dy * dy <= placement_radius * placement_radius;
+	}
+
+	public Inventory getInventory()
+	{
+		return this.inventory;
+	}
+
+	public void stop()
+	{
+		for(Direction d : Direction.values())
+		{
+			moveKeys[d.getVal()] = false;
+			currentAnimation.setMoving(true);
+		}
 	}
 }

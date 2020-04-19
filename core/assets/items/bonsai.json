@@ -1,0 +1,10 @@
+{
+  "id": "bonsai",
+  "display_name": "Bonsai Sapling",
+  "texture": {
+    "x": 1,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

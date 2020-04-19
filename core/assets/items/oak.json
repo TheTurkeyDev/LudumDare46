@@ -1,0 +1,10 @@
+{
+  "id": "oak",
+  "display_name": "Oak Sapling",
+  "texture": {
+    "x": 0,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

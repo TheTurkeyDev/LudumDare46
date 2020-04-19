@@ -1,0 +1,10 @@
+{
+  "id": "pine",
+  "display_name": "Deadpine Sapling",
+  "texture": {
+    "x": 4,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

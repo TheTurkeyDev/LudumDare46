@@ -1,0 +1,10 @@
+{
+  "id": "cactus",
+  "display_name": "Cactus Sapling",
+  "texture": {
+    "x": 6,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

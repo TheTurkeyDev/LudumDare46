@@ -3,11 +3,11 @@ package com.theprogrammingturkey.ld46;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
+import com.theprogrammingturkey.ld46.registry.ItemRegistry;
+import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.SnackBar;
 import com.theprogrammingturkey.ld46.rendering.Textures;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
-import com.theprogrammingturkey.ld46.rendering.Renderer;
 
 public class LD46 extends Game
 {
@@ -23,6 +23,7 @@ public class LD46 extends Game
 	{
 		Renderer.init();
 		Textures.init();
+		ItemRegistry.registerItems();
 		super.setScreen(new GameScreen());
 	}
 
@@ -49,5 +50,6 @@ public class LD46 extends Game
 	public void dispose()
 	{
 		Renderer.dispose();
+		Textures.dispose();
 	}
 }

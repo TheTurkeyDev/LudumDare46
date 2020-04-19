@@ -1,0 +1,22 @@
+{
+  "id": "dead",
+  "type": "tree",
+  "display": "Dead Tree",
+  "base_growth_speed": 0,
+  "attributes": [
+    {
+      "name": "water",
+      "base": 0,
+      "decay": 0
+    },
+    {
+      "name": "light",
+      "base": 0
+    },
+    {
+      "name": "temperature",
+      "min": -1,
+      "max": 1
+    }
+  ]
+}

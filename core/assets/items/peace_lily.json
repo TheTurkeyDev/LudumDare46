@@ -1,0 +1,10 @@
+{
+  "id": "peace_lily",
+  "display_name": "Peace Lily Sapling",
+  "texture": {
+    "x": 8,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}
