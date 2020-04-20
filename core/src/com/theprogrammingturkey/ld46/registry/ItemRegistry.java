@@ -7,8 +7,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.theprogrammingturkey.ld46.item.Item;
+import com.theprogrammingturkey.ld46.item.ItemHeatLamp;
 import com.theprogrammingturkey.ld46.item.ItemSapling;
 import com.theprogrammingturkey.ld46.item.ItemStack;
+import com.theprogrammingturkey.ld46.item.WateringCan;
 import com.theprogrammingturkey.ld46.rendering.Textures;
 
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public class ItemRegistry
 		loadItem(new ItemSapling("cactus"));
 		loadItem(new ItemSapling("cherry_blossom"));
 		loadItem(new ItemSapling("elm"));
-		loadItem(new ItemSapling("iucca"));
+		loadItem(new ItemSapling("yucca"));
 		loadItem(new ItemSapling("jade"));
 		loadItem(new ItemSapling("oak"));
 		loadItem(new ItemSapling("peace_lily"));
@@ -32,6 +34,8 @@ public class ItemRegistry
 		loadItem(new ItemSapling("rotala"));
 		loadItem(new Item("stick"));
 		loadItem(new Item("log"));
+		loadItem(new WateringCan("watering_can"));
+		loadItem(new ItemHeatLamp("heat_lamp"));
 	}
 
 	public static Item getItem(String id)

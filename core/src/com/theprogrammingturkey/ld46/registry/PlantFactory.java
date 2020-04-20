@@ -15,11 +15,7 @@ import com.theprogrammingturkey.ld46.entity.attributes.LightAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.NutrientAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.TempratureAttribute;
 import com.theprogrammingturkey.ld46.entity.attributes.WaterAttribute;
-import com.theprogrammingturkey.ld46.entity.tree.BonsaiTree;
-import com.theprogrammingturkey.ld46.entity.tree.Cactus;
-import com.theprogrammingturkey.ld46.entity.tree.CherryBlossomTree;
-import com.theprogrammingturkey.ld46.entity.tree.DeadTree;
-import com.theprogrammingturkey.ld46.entity.tree.OakTree;
+import com.theprogrammingturkey.ld46.entity.tree.*;
 import com.theprogrammingturkey.ld46.game.World;
 import com.theprogrammingturkey.ld46.rendering.WrapperTR;
 
@@ -64,11 +60,24 @@ public class PlantFactory
 				float base = 0;
 				if(attribute.has("base"))
 					base = attribute.get("base").getAsFloat();
+
+				float min = 0;
+				if(attribute.has("min"))
+					min = attribute.get("min").getAsFloat();
+
+				float max = 0;
+				if(attribute.has("max"))
+					max = attribute.get("max").getAsFloat();
+
+				float tolerance = 0;
+				if(attribute.has("tolerance"))
+					tolerance = attribute.get("tolerance").getAsFloat();
+
 				switch(attribute.get("name").getAsString())
 				{
 					case "water":
 						float decay = attribute.get("decay").getAsFloat();
-						WaterAttribute waterAttribute = new WaterAttribute(base, 0, 100, decay);
+						WaterAttribute waterAttribute = new WaterAttribute(base, min, max, decay, tolerance);
 						p.setWaterAttribute(waterAttribute);
 						break;
 					case "light":
@@ -80,9 +89,7 @@ public class PlantFactory
 						p.addNutrientAttributes(nutrientAttribute);
 						break;
 					case "temperature":
-						float min = attribute.get("min").getAsFloat();
-						float max = attribute.get("max").getAsFloat();
-						TempratureAttribute tempratureAttribute = new TempratureAttribute(base, min, max);
+						TempratureAttribute tempratureAttribute = new TempratureAttribute(base, min, max, tolerance);
 						p.setTempratureAttribute(tempratureAttribute);
 						break;
 				}
@@ -120,13 +127,17 @@ public class PlantFactory
 		plantsToClasses.put("tree/bonsai", BonsaiTree.class);
 		plantsToClasses.put("tree/cactus", Cactus.class);
 		plantsToClasses.put("tree/cherry_blossom", CherryBlossomTree.class);
+		plantsToClasses.put("tree/elm", ElmTree.class);
+		plantsToClasses.put("tree/jade", JadeTree.class);
+		plantsToClasses.put("tree/peace_lily", PeaceLilyTree.class);
+		plantsToClasses.put("tree/pine", PineTree.class);
+		plantsToClasses.put("tree/rotala", RotalaTree.class);
+		plantsToClasses.put("tree/yucca", YuccaTree.class);
 
 
-		FileHandle f = Gdx.files.internal("plants/");
-		String[] files = f.readString().split("\n");
-		for(String fileName : files)
+		for(String fileName : plantsToClasses.keySet())
 		{
-			FileHandle file = Gdx.files.internal("plants/" + fileName);
+			FileHandle file = Gdx.files.internal("plants/" + fileName + ".json");
 			JsonElement json = JsonParser.parseString(file.readString());
 			if(!json.isJsonObject())
 				continue;

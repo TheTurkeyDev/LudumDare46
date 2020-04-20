@@ -49,7 +49,7 @@ public class PlantStatusOverlay extends Overlay
 	public void render(float delta)
 	{
 		Rectangle plantBB = plant.getBoundingBox();
-		Renderer.draw(Textures.arrow, plantBB.x + (plantBB.width / 2) - 32, arrowBounce + plantBB.y + plantBB.height, 64, 64);
+		Renderer.draw(Textures.arrow, plantBB.x + (plantBB.width / 2) - 32, arrowBounce + plantBB.y + plantBB.height, 64, 64, Color.YELLOW);
 
 		arrowBounce += arrowBounceInc;
 		if(arrowBounce > 20 || arrowBounce < -20)

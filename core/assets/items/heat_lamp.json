@@ -1,8 +1,8 @@
 {
-  "id": "iucca",
-  "display_name": "Iucca Sapling",
+  "id": "heat_lamp",
+  "display_name": "Heat Lamp",
   "texture": {
-    "x": 9,
+    "x": 15,
     "y": 2,
     "width": 64,
     "height": 64

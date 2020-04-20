@@ -7,7 +7,7 @@ public class Time
 
 	public void update()
 	{
-		gameTime += 1;
+		gameTime += 5;
 	}
 
 	public int getDay()

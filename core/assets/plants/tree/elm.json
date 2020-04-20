@@ -1,15 +1,17 @@
 {
-  "id": "bonsai",
+  "id": "elm",
   "type": "tree",
-  "display": "Bonsai Tree",
-  "base_growth_pow": 0.35,
-  "base_growth_speed": 0.02,
-  "size_scalar": 9,
+  "display": "Elm Tree",
+  "base_growth_speed": 0.005,
+  "size_scalar": 15,
   "attributes": [
     {
       "name": "water",
-      "base": 100,
-      "decay": 0.0005
+      "min": 20,
+      "max": 60,
+      "base": 45,
+      "tolerance": 5000,
+      "decay": 0.0015
     },
     {
       "name": "light",
@@ -23,13 +25,13 @@
   ],
   "textures": [
     {
-      "x": 4,
+      "x": 7,
       "y": 0,
       "width": 64,
       "height": 64
     },
     {
-      "x": 5,
+      "x": 8,
       "y": 0,
       "width": 64,
       "height": 64,

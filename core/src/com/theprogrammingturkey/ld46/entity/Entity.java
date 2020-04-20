@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.theprogrammingturkey.ld46.game.World;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.WrapperTR;
+import com.theprogrammingturkey.ld46.screen.GameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,5 +80,10 @@ public class Entity
 	public boolean isDead()
 	{
 		return dead;
+	}
+
+	public void onClick(GameScreen screen, Player player)
+	{
+
 	}
 }

@@ -1,8 +1,6 @@
 package com.theprogrammingturkey.ld46.entity.tree;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.theprogrammingturkey.ld46.LD46;
 import com.theprogrammingturkey.ld46.entity.Plant;
 import com.theprogrammingturkey.ld46.entity.PlantType;
 import com.theprogrammingturkey.ld46.game.World;
@@ -31,9 +29,18 @@ public class Tree extends Plant
 	public List<ItemStack> getDrops()
 	{
 		List<ItemStack> drops = super.getDrops();
-		drops.add(ItemRegistry.getItemStack("stick", (int) getSize().x / 20));
-		drops.add(ItemRegistry.getItemStack("log", (int) getSize().x / 30));
-		drops.add(ItemRegistry.getItemStack(id, (int) getSize().x / 75));
+
+		int sticks = (int) getSize().x / 20;
+		if(sticks > 0)
+			drops.add(ItemRegistry.getItemStack("stick", sticks));
+
+		int logs = (int) getSize().x / 30;
+		if(logs > 0)
+			drops.add(ItemRegistry.getItemStack("log", logs));
+
+		int saplings = (int) getSize().x / 75;
+		if(saplings > 0)
+			drops.add(ItemRegistry.getItemStack(id, saplings));
 		return drops;
 	}
 
@@ -41,7 +48,6 @@ public class Tree extends Plant
 	public void kill()
 	{
 		super.kill();
-		LD46.SNACK_BAR.createSnackMessage("SEEMS THE TREE DIDN'T SURVIVE THE TRIM", Color.RED);
 		PlantFactory plantFactory = new PlantFactory(PlantType.TREE, "dead");
 		Plant p = plantFactory.create(world, location.cpy(), 0);
 		p.setSize(96);

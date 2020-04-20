@@ -13,12 +13,14 @@ import com.theprogrammingturkey.ld46.entity.state.PlayerState;
 import com.theprogrammingturkey.ld46.game.action.Action;
 import com.theprogrammingturkey.ld46.game.action.ChopAction;
 import com.theprogrammingturkey.ld46.game.action.TrimAction;
+import com.theprogrammingturkey.ld46.game.action.WateringAction;
 import com.theprogrammingturkey.ld46.item.ItemStack;
 import com.theprogrammingturkey.ld46.registry.PlantFactory;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
 import com.theprogrammingturkey.ld46.screen.overlay.ActionsOverlay;
 import com.theprogrammingturkey.ld46.screen.overlay.InventoryExtensionOverlay;
 import com.theprogrammingturkey.ld46.screen.overlay.PlantStatusOverlay;
+import com.theprogrammingturkey.ld46.sounds.SoundManager;
 import com.theprogrammingturkey.ld46.util.Direction;
 
 import java.util.Random;
@@ -38,8 +40,6 @@ public class GameCore
 
 		this.screen = screen;
 		thePlayer = new Player(world, new Vector2(200, 200));
-
-		PlantFactory.loadPlants();
 
 		world.initWorld();
 	}
@@ -78,6 +78,10 @@ public class GameCore
 				thePlayer.setState(PlayerState.NONE);
 			}
 		}
+		else if(keycode == Input.Keys.SHIFT_LEFT)
+		{
+			thePlayer.setRunning(true);
+		}
 
 		if(keycode == Input.Keys.W)
 		{
@@ -100,6 +104,11 @@ public class GameCore
 
 	public boolean keyUp(int keycode)
 	{
+		if(keycode == Input.Keys.SHIFT_LEFT)
+		{
+			thePlayer.setRunning(false);
+		}
+
 		if(keycode == Input.Keys.W)
 		{
 			thePlayer.setMoveState(Direction.UP, false);
@@ -129,12 +138,21 @@ public class GameCore
 			{
 				thePlayer.getCurrentSlot().getStack().getItem().onPlace(world, new Vector2(screenX, yFlip));
 				thePlayer.getCurrentSlot().decrementSlotCount();
+				SoundManager.playSound(SoundManager.plant);
 				thePlayer.setState(PlayerState.NONE);
 				return true;
 			}
 			else
 			{
 				LD46.SNACK_BAR.createSnackMessage("PLACEMENT OUT OF RADIUS", Color.RED);
+			}
+		}
+		else if(button == 1)
+		{
+			ItemStack stack = thePlayer.getCurrentSlot().getStack();
+			if(stack != ItemStack.EMPTY && stack.getItem().isUseable())
+			{
+				stack.getItem().onUse(world, thePlayer.getLocation());
 			}
 		}
 
@@ -145,7 +163,7 @@ public class GameCore
 			Rectangle rect = plant.getBoundingBox();
 			if(rect.contains(screenX, yFlip))
 			{
-				if(rect.getPosition(entCenter).add(rect.getWidth() / 2, 0).dst(playercenter) < GameValues.PLANT_INTERACT_RADIUS)
+				if(rect.getPosition(entCenter).add(rect.getWidth() / 2, 0).dst(playercenter) < GameValues.INTERACT_RADIUS)
 				{
 					if(button == 0)
 					{
@@ -156,7 +174,7 @@ public class GameCore
 					else if(button == 1)
 					{
 						screen.setCurrentOverlay(new ActionsOverlay(plant, screen, null,
-								new Action("Water", () -> System.out.println("Water!")),
+								new WateringAction(plant, thePlayer),
 								new TrimAction(plant, thePlayer),
 								new ChopAction(plant, thePlayer),
 								new Action("Gather", () -> System.out.println("Gather!"))
@@ -176,11 +194,11 @@ public class GameCore
 			Rectangle rect = entity.getBoundingBox();
 			if(rect.contains(screenX, yFlip))
 			{
-				if(rect.getPosition(entCenter).add(rect.getWidth() / 2, 0).dst(playercenter) < 64)
+				if(rect.getPosition(entCenter).add(rect.getWidth() / 2, rect.getHeight() / 2).dst(playercenter) < GameValues.INTERACT_RADIUS)
 				{
 					if(button == 1)
 					{
-						System.out.println("Market!");
+						entity.onClick(screen, thePlayer);
 						return true;
 					}
 				}

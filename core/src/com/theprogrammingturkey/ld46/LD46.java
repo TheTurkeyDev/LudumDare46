@@ -3,15 +3,19 @@ package com.theprogrammingturkey.ld46;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.theprogrammingturkey.ld46.inventory.Inventory;
 import com.theprogrammingturkey.ld46.registry.ItemRegistry;
+import com.theprogrammingturkey.ld46.registry.PlantFactory;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.SnackBar;
 import com.theprogrammingturkey.ld46.rendering.Textures;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
+import com.theprogrammingturkey.ld46.screen.MainMenuScreen;
 import com.theprogrammingturkey.ld46.sounds.SoundManager;
 
 public class LD46 extends Game
 {
+	public static LD46 INSTANCE;
 	private static final Color SKY_BLUE = Color.valueOf("87CEEB");
 
 	public static final SnackBar SNACK_BAR = new SnackBar();
@@ -19,14 +23,21 @@ public class LD46 extends Game
 	public static int width = 1280;
 	public static int height = 720;
 
+
+	public LD46()
+	{
+		INSTANCE = this;
+	}
+
 	@Override
 	public void create()
 	{
 		Renderer.init();
 		Textures.init();
 		ItemRegistry.registerItems();
+		PlantFactory.loadPlants();
 		SoundManager.initSounds();
-		super.setScreen(new GameScreen());
+		super.setScreen(new MainMenuScreen());
 	}
 
 	@Override

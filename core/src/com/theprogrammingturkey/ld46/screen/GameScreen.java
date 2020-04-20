@@ -142,7 +142,8 @@ public class GameScreen implements Screen
 		Renderer.drawStringAligned(Renderer.rust, cx, cy - 50, time.toString(), .25f, Align.center, Color.WHITE);
 		Renderer.drawStringAligned(Renderer.rust, cx, cy - 70, "Day: " + world.getGameTime().getDay(), .2f, Align.center, Color.WHITE);
 		Renderer.drawStringAligned(Renderer.rust, cx, cy - 90, "Temp: " + StringUtil.formatToInt(world.getWeather().getTemp()), .2f, Align.center, Color.WHITE);
-
+		float width = Renderer.drawStringAligned(Renderer.rust, cx - 50, cy + 20, String.valueOf(theGame.getPlayer().getMoney()), .25f, Align.right, Color.WHITE);
+		Renderer.draw(Textures.coin, cx - width - 90, cy + 10, 20, 20);
 
 		if(currenOverlay instanceof InventoryExtensionOverlay)
 			currenOverlay.render(delta);

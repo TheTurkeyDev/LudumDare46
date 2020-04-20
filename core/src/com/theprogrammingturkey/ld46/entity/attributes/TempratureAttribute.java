@@ -1,26 +1,29 @@
 package com.theprogrammingturkey.ld46.entity.attributes;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.Align;
 import com.theprogrammingturkey.ld46.entity.Plant;
 import com.theprogrammingturkey.ld46.game.Weather;
+import com.theprogrammingturkey.ld46.game.World;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.Textures;
 import com.theprogrammingturkey.ld46.util.MathHelper;
+import com.theprogrammingturkey.ld46.util.StringUtil;
 
 public class TempratureAttribute extends Attribute
 {
 	private static final int LOWER_BOUND = -100;
 	private static final int UPPER_BOUND = 100;
 
-	public TempratureAttribute(float currentValue, float minValue, float maxValue)
+	public TempratureAttribute(float currentValue, float minValue, float maxValue, float tolerance)
 	{
-		super(currentValue, minValue, maxValue);
+		super(currentValue, minValue, maxValue, tolerance);
 	}
 
 	@Override
-	public void update(Plant plant, Weather weather)
+	public void update(World world, Plant plant)
 	{
-		this.currentValue = weather.getTemp();
+		this.currentValue = world.getWeather().getTemp();
 		float threeFourths = getMinValue() + ((getMaxValue() - getMinValue()) * (3f / 4f));
 		if(this.currentValue > threeFourths)
 		{
@@ -40,5 +43,14 @@ public class TempratureAttribute extends Attribute
 		Renderer.drawRect(x + 25 + lowerX, y - 36, 3, 40, 0, Color.GREEN, true);
 		Renderer.drawRect(x + 25 + upperX, y - 36, 3, 40, 0, Color.GREEN, true);
 		Renderer.drawRect(x + 25 + tempX, y - 36, 3, 40, 0, Color.WHITE, true);
+
+		Renderer.drawStringAligned(Renderer.rust, x + 25, y + 10, String.valueOf(LOWER_BOUND), 0.175f, Align.center, Color.BLACK);
+		Renderer.drawStringAligned(Renderer.rust, x + barWidth + 25, y + 10, String.valueOf(UPPER_BOUND), 0.175f, Align.center, Color.BLACK);
+		if(LOWER_BOUND != getMinValue())
+			Renderer.drawStringAligned(Renderer.rust, x + lowerX + 25, y + 10, String.valueOf(getMinValue()), 0.175f, Align.center, Color.BLACK);
+		if(UPPER_BOUND != getMaxValue())
+			Renderer.drawStringAligned(Renderer.rust, x + upperX + 25, y + 10, String.valueOf(getMaxValue()), 0.175f, Align.center, Color.BLACK);
+		Renderer.drawStringAligned(Renderer.rust, x + 50 + tempX, y - 15, StringUtil.formatDecimal(getCurrentValue()), 0.175f, Align.center, Color.WHITE);
+
 	}
 }

@@ -73,13 +73,13 @@ public class Plant extends Entity
 
 		currentLightValue = world.getCurrentLight();
 
-		lifePointsAttribute.update(this, world.getWeather());
-		lightAttribute.update(this, world.getWeather());
-		tempratureAttribute.update(this, world.getWeather());
-		waterAttribute.update(this, world.getWeather());
+		lifePointsAttribute.update(world, this);
+		lightAttribute.update(world, this);
+		tempratureAttribute.update(world, this);
+		waterAttribute.update(world, this);
 		for(NutrientAttribute attribute : nutrientAttributes)
 		{
-			attribute.update(this, world.getWeather());
+			attribute.update(world, this);
 		}
 	}
 
@@ -239,7 +239,6 @@ public class Plant extends Entity
 	public void kill()
 	{
 		super.kill();
-		//LD46.SNACK_BAR.createSnackMessage("SEEMS THE PLANT DIDN'T SURVIVE THE TRIM", Color.RED);
 	}
 
 	public float getSizeForMaxLP()

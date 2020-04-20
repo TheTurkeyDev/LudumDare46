@@ -14,6 +14,10 @@ public class SoundManager
 	public static Sound background;
 	public static List<Sound> birds = new ArrayList<>();
 	public static List<Sound> snips = new ArrayList<>();
+	public static Sound chop;
+	public static Sound plant;
+	public static Sound watering;
+	public static Sound click;
 
 	public static void initSounds()
 	{
@@ -22,6 +26,10 @@ public class SoundManager
 		birds.add(Gdx.audio.newSound(Gdx.files.internal("sounds/bird2.ogg")));
 		snips.add(Gdx.audio.newSound(Gdx.files.internal("sounds/snip.ogg")));
 		snips.add(Gdx.audio.newSound(Gdx.files.internal("sounds/snip2.ogg")));
+		chop = Gdx.audio.newSound(Gdx.files.internal("sounds/chop.ogg"));
+		plant = Gdx.audio.newSound(Gdx.files.internal("sounds/plant.ogg"));
+		watering = Gdx.audio.newSound(Gdx.files.internal("sounds/watering.ogg"));
+		click = Gdx.audio.newSound(Gdx.files.internal("sounds/click.ogg"));
 	}
 
 	public static void startBGSound()
@@ -48,7 +56,6 @@ public class SoundManager
 
 	public static void playRandomBird()
 	{
-		System.out.println("BIRD!");
 		playSound(birds.get(GameCore.rand.nextInt(birds.size())));
 	}
 
@@ -64,5 +71,8 @@ public class SoundManager
 			s.dispose();
 		for(Sound s : snips)
 			s.dispose();
+		chop.dispose();
+		plant.dispose();
+		watering.dispose();
 	}
 }

@@ -119,7 +119,7 @@ public class InventoryExtensionOverlay extends Overlay
 
 	public boolean keyDown(int keycode)
 	{
-		if(keycode == Input.Keys.E)
+		if(keycode == Input.Keys.E || keycode == Input.Keys.ESCAPE)
 		{
 			isAnimatingOut = true;
 			return true;

@@ -1,9 +1,10 @@
 package com.theprogrammingturkey.ld46.entity.attributes;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.theprogrammingturkey.ld46.entity.Plant;
 import com.theprogrammingturkey.ld46.game.GameValues;
-import com.theprogrammingturkey.ld46.game.Weather;
+import com.theprogrammingturkey.ld46.game.World;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.util.StringUtil;
 
@@ -12,18 +13,19 @@ public class LifePointsAttribute extends Attribute
 
 	public LifePointsAttribute(float mexHealth)
 	{
-		super(mexHealth, 0, mexHealth);
+		super(mexHealth, 0, mexHealth, 0);
 	}
 
 	@Override
-	public void update(Plant plant, Weather weather)
+	public void update(World world, Plant plant)
 	{
-		currentValue += GameValues.LP_GAIN;
+		float lpChange = GameValues.LP_GAIN;
 		WaterAttribute water = plant.getWaterAttribute();
-		if(water.currentValue < (water.getMaxValue() - water.getMinValue()) / 4)
-		{
-			currentValue -= ((water.getMaxValue() - water.getMinValue()) / 4) - water.currentValue;
-		}
+		//TODO: Tolerance Attribute
+		if(water.currentValue < water.getMinValue())
+			lpChange -= (water.getMinValue() - water.currentValue) / water.tolerance;
+		else if(water.currentValue > water.getMaxValue())
+			lpChange -= (water.currentValue - water.getMaxValue()) / water.tolerance;
 
 		LightAttribute light = plant.getLightAttribute();
 		if(light.currentValue == 0 || light.currentValue == light.getMaxValue())
@@ -32,10 +34,19 @@ public class LifePointsAttribute extends Attribute
 		}
 
 		TempratureAttribute temp = plant.getTempratureAttribute();
-		if(temp.currentValue < temp.getMinValue() || temp.currentValue > temp.getMaxValue())
-		{
-			currentValue -= 0.01;
-		}
+		//TODO: Tolerance Attribute
+		if(temp.currentValue < temp.getMinValue())
+			lpChange -= (temp.getMinValue() - temp.currentValue) / temp.tolerance;
+		else if(temp.currentValue > temp.getMaxValue())
+			lpChange -= (temp.currentValue - temp.getMaxValue()) / temp.tolerance;
+
+		lpChange = MathUtils.clamp(lpChange, -.1f, 10);
+		currentValue += lpChange;
+
+		currentValue = MathUtils.clamp(currentValue, getMinValue(), getMaxValue());
+
+		if(currentValue <= 0)
+			plant.kill();
 	}
 
 	public void increaseMaxLP(float amount)

@@ -8,7 +8,10 @@
   "attributes": [
     {
       "name": "water",
-      "base": 10,
+      "min": 5,
+      "max": 20,
+      "base": 20,
+      "tolerance": 500,
       "decay": 0.00005
     },
     {
@@ -18,7 +21,8 @@
     {
       "name": "temperature",
       "min": 10,
-      "max": 90
+      "max": 90,
+      "tolerance": 500
     }
   ],
   "textures": [

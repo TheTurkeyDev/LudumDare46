@@ -1,0 +1,36 @@
+{
+  "id": "rotala",
+  "type": "tree",
+  "display": "Rotala",
+  "base_growth_speed": 0.005,
+  "base_growth_pow": 0.4,
+  "size_scalar": 11,
+  "attributes": [
+    {
+      "name": "water",
+       "min": 70,
+      "max": 100,
+      "base": 100,
+      "tolerance": 5000,
+      "decay": 0.0015
+    },
+    {
+      "name": "light",
+      "base": 100
+    },
+    {
+      "name": "temperature",
+      "min": -10,
+      "max": 80
+    }
+  ],
+  "textures": [
+    {
+      "x": 6,
+      "y": 0,
+      "width": 64,
+      "height": 64,
+      "base_tint": "#00ff00ff"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "watering_can",
+  "display_name": "Watering Can",
+  "texture": {
+    "x": 13,
+    "y": 2,
+    "width": 64,
+    "height": 64
+  }
+}

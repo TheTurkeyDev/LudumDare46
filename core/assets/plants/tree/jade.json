@@ -1,14 +1,18 @@
 {
-  "id": "cherry_blossom",
+  "id": "jade",
   "type": "tree",
-  "display": "Cherry Blossom",
+  "display": "Jade Tree",
   "base_growth_speed": 0.005,
-  "size_scalar": 15,
+  "base_growth_pow": 0.4,
+  "size_scalar": 10,
   "attributes": [
     {
       "name": "water",
-      "base": 100,
-      "decay": 0.0005
+      "min": 5,
+      "max": 20,
+      "base": 20,
+      "tolerance": 500,
+      "decay": 0.0001
     },
     {
       "name": "light",
@@ -22,17 +26,17 @@
   ],
   "textures": [
     {
-      "x": 11,
+      "x": 15,
       "y": 0,
       "width": 64,
       "height": 64
     },
     {
-      "x": 12,
+      "x": 16,
       "y": 0,
       "width": 64,
       "height": 64,
-      "base_tint": "#ffb7c5"
+      "base_tint": "#00ff00ff"
     }
   ]
 }

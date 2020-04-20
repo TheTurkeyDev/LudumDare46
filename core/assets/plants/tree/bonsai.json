@@ -1,0 +1,42 @@
+{
+  "id": "bonsai",
+  "type": "tree",
+  "display": "Bonsai Tree",
+  "base_growth_pow": 0.35,
+  "base_growth_speed": 0.02,
+  "size_scalar": 9,
+  "attributes": [
+    {
+      "name": "water",
+       "min": 35,
+      "max": 85,
+      "base": 85,
+      "tolerance": 5000,
+      "decay": 0.0025
+    },
+    {
+      "name": "light",
+      "base": 100
+    },
+    {
+      "name": "temperature",
+      "min": -30,
+      "max": 50
+    }
+  ],
+  "textures": [
+    {
+      "x": 4,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "width": 64,
+      "height": 64,
+      "base_tint": "#00ff00ff"
+    }
+  ]
+}

@@ -1,44 +1,41 @@
 {
-  "id": "oak",
+  "id": "cherry_blossom",
   "type": "tree",
-  "display": "Oak Tree",
+  "display": "Cherry Blossom",
   "base_growth_speed": 0.005,
   "size_scalar": 15,
   "attributes": [
     {
       "name": "water",
-      "base": 100,
-      "decay": 0.0005
+      "min": 50,
+      "max": 90,
+      "base": 60,
+      "tolerance": 5000,
+      "decay": 0.002
     },
     {
       "name": "light",
       "base": 100
     },
     {
-      "name": "nutrient",
-      "type": "A",
-      "base": 100,
-      "decay": 1
-    },
-    {
       "name": "temperature",
-      "min": -30,
-      "max": 50
+      "min": 10,
+      "max": 70
     }
   ],
   "textures": [
     {
-      "x": 2,
+      "x": 11,
       "y": 0,
       "width": 64,
       "height": 64
     },
     {
-      "x": 3,
+      "x": 12,
       "y": 0,
       "width": 64,
       "height": 64,
-      "base_tint": "#00ff00ff"
+      "base_tint": "#ffb7c5"
     }
   ]
 }

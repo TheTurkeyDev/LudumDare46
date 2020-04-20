@@ -1,19 +1,21 @@
 package com.theprogrammingturkey.ld46.entity.attributes;
 
 import com.theprogrammingturkey.ld46.entity.Plant;
-import com.theprogrammingturkey.ld46.game.Weather;
+import com.theprogrammingturkey.ld46.game.World;
 
 public abstract class Attribute
 {
 	protected float currentValue;
 	private float minValue;
 	private float maxValue;
+	protected float tolerance;
 
-	public Attribute(float currentValue, float minValue, float maxValue)
+	public Attribute(float currentValue, float minValue, float maxValue, float tolerance)
 	{
 		this.currentValue = currentValue;
 		this.minValue = minValue;
 		this.maxValue = maxValue;
+		this.tolerance = tolerance;
 	}
 
 	public float getCurrentValue()
@@ -46,7 +48,7 @@ public abstract class Attribute
 		this.minValue = minValue;
 	}
 
-	public abstract void update(Plant plant, Weather weather);
+	public abstract void update(World world, Plant plant);
 
 	public abstract void renderAsInfoGraphic(float delta, int x, int y);
 }

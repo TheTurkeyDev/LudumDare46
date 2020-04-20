@@ -33,6 +33,16 @@ public class Inventory
 		return false;
 	}
 
+	public ItemStack getStackForItem(Item item)
+	{
+		for(Slot s : slots)
+		{
+			if(s.getStack().getItem() == item)
+				return s.getStack();
+		}
+		return ItemStack.EMPTY;
+	}
+
 	public Slot getSlot(int index)
 	{
 		return slots[index];

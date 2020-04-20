@@ -3,32 +3,31 @@ package com.theprogrammingturkey.ld46.screen.overlay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Align;
-import com.theprogrammingturkey.ld46.entity.Plant;
+import com.theprogrammingturkey.ld46.entity.Entity;
 import com.theprogrammingturkey.ld46.game.action.Action;
 import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ActionsOverlay extends Overlay
 {
-	private List<Action> actions = new ArrayList<>();
-	private Plant plant;
+	private List<Action> actions;
+	private Entity entity;
 
 	private float centerX;
 	private float centerY;
 
-	public ActionsOverlay(Plant plant, GameScreen screen, Overlay parent, Action... actions)
+	public ActionsOverlay(Entity entity, GameScreen screen, Overlay parent, Action... actions)
 	{
 		super(screen, parent);
-		this.plant = plant;
+		this.entity = entity;
 
 		this.actions = Arrays.asList(actions);
 
-		centerX = plant.getLocation().x;
-		centerY = plant.getLocation().y + (plant.getSize().y / 2);
+		centerX = entity.getLocation().x;
+		centerY = entity.getLocation().y + (entity.getSize().y / 2);
 	}
 
 	@Override

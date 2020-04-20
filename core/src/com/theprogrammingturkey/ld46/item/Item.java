@@ -51,6 +51,16 @@ public class Item
 
 	}
 
+	public boolean isUseable()
+	{
+		return false;
+	}
+
+	public void onUse(World world, Vector2 vec)
+	{
+
+	}
+
 	@Override
 	public String toString()
 	{

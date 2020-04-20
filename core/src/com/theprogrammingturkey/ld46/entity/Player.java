@@ -19,6 +19,7 @@ public class Player extends Entity
 {
 	public static int placement_radius = 40;
 	public static float MOVE_SPEED = 1f;
+	public static float RUN_SPEED = 2f;
 
 	// W/A/S/D
 	public boolean[] moveKeys = new boolean[4];
@@ -26,6 +27,9 @@ public class Player extends Entity
 	private Animation currentAnimation;
 
 	public PlayerState state = PlayerState.NONE;
+	private boolean isRunning = false;
+
+	private int money = 0;
 
 	private int currentSlot = 0;
 	public Inventory inventory = new Inventory(25);
@@ -54,10 +58,7 @@ public class Player extends Entity
 
 		currentAnimation = animations[0];
 
-		inventory.addToInventory(ItemRegistry.getItemStack("oak"));
-		inventory.addToInventory(ItemRegistry.getItemStack("bonsai"));
-		inventory.addToInventory(ItemRegistry.getItemStack("cactus"));
-		inventory.addToInventory(ItemRegistry.getItemStack("cherry_blossom"));
+		inventory.addToInventory(ItemRegistry.getItemStack("watering_can"));
 	}
 
 	public void update()
@@ -71,9 +72,19 @@ public class Player extends Entity
 			{
 				currentAnimation = animations[d.getVal()];
 				currentAnimation.setMoving(true);
-				d.addToLoc(location, MOVE_SPEED);
+				d.addToLoc(location, isRunning ? RUN_SPEED : MOVE_SPEED);
 			}
 		}
+
+		if(location.x < 0)
+			location.x = 0;
+		else if(location.x > Gdx.graphics.getWidth() - (size.x / 2))
+			location.x = Gdx.graphics.getWidth() - (size.x / 2);
+
+		if(location.y < 0)
+			location.y = 0;
+		else if(location.y > Gdx.graphics.getHeight() - (size.y / 2))
+			location.y = Gdx.graphics.getHeight() - (size.y / 2);
 	}
 
 	@Override
@@ -150,5 +161,25 @@ public class Player extends Entity
 			moveKeys[d.getVal()] = false;
 			currentAnimation.setMoving(true);
 		}
+	}
+
+	public void setRunning(boolean running)
+	{
+		this.isRunning = running;
+	}
+
+	public void incMoney(int amount)
+	{
+		money += amount;
+	}
+
+	public void decMoney(int amount)
+	{
+		money -= amount;
+	}
+
+	public int getMoney()
+	{
+		return money;
 	}
 }

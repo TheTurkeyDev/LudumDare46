@@ -1,0 +1,48 @@
+{
+  "id": "oak",
+  "type": "tree",
+  "display": "Oak Tree",
+  "base_growth_speed": 0.005,
+  "size_scalar": 15,
+  "attributes": [
+    {
+      "name": "water",
+      "min": 10,
+      "max": 45,
+      "base": 45,
+      "tolerance": 5000,
+      "decay": 0.0015
+    },
+    {
+      "name": "light",
+      "base": 100
+    },
+    {
+      "name": "nutrient",
+      "type": "A",
+      "base": 100,
+      "decay": 1
+    },
+    {
+      "name": "temperature",
+      "min": -30,
+      "max": 50,
+      "tolerance": 2000
+    }
+  ],
+  "textures": [
+    {
+      "x": 2,
+      "y": 0,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "width": 64,
+      "height": 64,
+      "base_tint": "#00ff00ff"
+    }
+  ]
+}

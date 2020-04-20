@@ -28,6 +28,23 @@ public class World
 	private float light = 0f;
 	private float sunAngle = 0f;
 
+	//@formatter: off
+	private int[][] tiles = new int[][]{
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	};
+
+	//@formatter:on
 	public World(GameCore gameCore)
 	{
 		this.game = gameCore;
@@ -69,17 +86,28 @@ public class World
 			//TODO: Deal with overlaps/ shadows
 		}
 
-		for(Entity ent : entityList)
+		for(int i = entityList.size() - 1; i >= 0; i--)
+		{
+			Entity ent = entityList.get(i);
 			ent.update();
+			if(ent.isDead())
+				entityList.remove(i);
+		}
 	}
 
 	public void render(float delta, boolean focused)
 	{
-		for(int x = 0; x < Gdx.graphics.getWidth(); x += 64)
+		for(int y = 0; y < tiles.length; y++)
 		{
-			for(int y = 0; y < Gdx.graphics.getHeight(); y += 64)
+			for(int x = 0; x < tiles[0].length; x++)
 			{
-				Renderer.draw(Textures.backgroundtile, x, y, 64, 64);
+				int tile = tiles[y][x];
+				if(tile == 0)
+					Renderer.draw(Textures.backgroundtile, x * 64, y * 64, 64, 64);
+				else if(tile == 1)
+					Renderer.draw(Textures.sand, x * 64, y * 64, 64, 64);
+				else if(tile == 2)
+					Renderer.draw(Textures.water, x * 64, y * 64, 64, 64);
 			}
 		}
 
@@ -87,8 +115,8 @@ public class World
 		{
 			if(focused && plant.getBoundingBox().contains(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()))
 			{
-				Renderer.drawCircle(plant.getLocation().x, plant.getLocation().y, GameValues.PLANT_INTERACT_RADIUS, GameColors.VALID_AREA, true);
-				Renderer.drawCircle(plant.getLocation().x, plant.getLocation().y, GameValues.PLANT_INTERACT_RADIUS, GameColors.VALID_AREA_NO_ALPHA, false);
+				Renderer.drawCircle(plant.getLocation().x, plant.getLocation().y, GameValues.INTERACT_RADIUS, GameColors.VALID_AREA, true);
+				Renderer.drawCircle(plant.getLocation().x, plant.getLocation().y, GameValues.INTERACT_RADIUS, GameColors.VALID_AREA_NO_ALPHA, false);
 			}
 			plant.render(delta);
 		}
@@ -99,8 +127,8 @@ public class World
 			{
 				Vector2 loc = ent.getLocation();
 				Vector2 size = ent.getSize();
-				Renderer.drawCircle(loc.x + (size.x / 2), loc.y + (size.y / 2), GameValues.PLANT_INTERACT_RADIUS, GameColors.VALID_AREA, true);
-				Renderer.drawCircle(loc.x + (size.x / 2), loc.y + (size.y / 2), GameValues.PLANT_INTERACT_RADIUS, GameColors.VALID_AREA_NO_ALPHA, false);
+				Renderer.drawCircle(loc.x + (size.x / 2), loc.y + (size.y / 2), GameValues.INTERACT_RADIUS, GameColors.VALID_AREA, true);
+				Renderer.drawCircle(loc.x + (size.x / 2), loc.y + (size.y / 2), GameValues.INTERACT_RADIUS, GameColors.VALID_AREA_NO_ALPHA, false);
 			}
 
 			ent.render(delta);
@@ -110,6 +138,11 @@ public class World
 	public void spawnPlant(Plant p)
 	{
 		plantList.add(p);
+	}
+
+	public void spawnEntity(Entity ent)
+	{
+		entityList.add(ent);
 	}
 
 	public float getSunAngle()
@@ -140,5 +173,12 @@ public class World
 	public List<Entity> getEntityList()
 	{
 		return entityList;
+	}
+
+	public int getTileTypeAtPos(float x, float y)
+	{
+		int xIndex = (int) x / 64;
+		int yIndex = (int) y / 64;
+		return tiles[yIndex][xIndex];
 	}
 }
