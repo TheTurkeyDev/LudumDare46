@@ -202,7 +202,7 @@ public class Plant extends Entity
 		return this.currentLightValue;
 	}
 
-	public void trim()
+	public boolean trim()
 	{
 		this.getLifePointsAttribute().setMaxValue(this.getLifePointsAttribute().getMaxValue() - GameValues.TRIM_COST);
 		this.getLifePointsAttribute().setCurrentValue(this.getLifePointsAttribute().getCurrentValue() - GameValues.TRIM_COST);
@@ -215,7 +215,7 @@ public class Plant extends Entity
 			if(currentHealth <= 0 || GameCore.rand.nextInt((int) maxHealth) == 0)
 			{
 				this.kill();
-				return;
+				return false;
 			}
 		}
 
@@ -223,6 +223,7 @@ public class Plant extends Entity
 			this.getLifePointsAttribute().setCurrentValue(maxHealth);
 
 		this.updateSize();
+		return true;
 	}
 
 	public List<ItemStack> getHarvests()

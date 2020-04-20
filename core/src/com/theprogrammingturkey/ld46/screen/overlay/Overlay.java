@@ -1,10 +1,10 @@
 package com.theprogrammingturkey.ld46.screen.overlay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Rectangle;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
 import com.theprogrammingturkey.ld46.screen.overlay.widgets.Widget;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class Overlay
 		Rectangle rect = new Rectangle();
 		for(Widget widget : widgets)
 		{
-			rect.setBounds(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
+			rect.set(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
 			if(rect.contains(screenX, yFlip))
 			{
 				widget.onClick();

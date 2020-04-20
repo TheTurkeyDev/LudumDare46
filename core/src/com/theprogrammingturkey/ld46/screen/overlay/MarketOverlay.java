@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.theprogrammingturkey.ld46.LD46;
 import com.theprogrammingturkey.ld46.entity.Player;
+import com.theprogrammingturkey.ld46.inventory.Slot;
 import com.theprogrammingturkey.ld46.item.ItemStack;
 import com.theprogrammingturkey.ld46.registry.ItemRegistry;
 import com.theprogrammingturkey.ld46.rendering.GameColors;
@@ -63,9 +64,13 @@ public class MarketOverlay extends Overlay
 			ItemStack stack = this.contents.get(i).stack;
 
 			int playerCount = 0;
-			ItemStack playerStack = player.inventory.getStackForItem(stack.getItem());
-			if(playerStack != ItemStack.EMPTY)
-				playerCount = playerStack.getAmount();
+			Slot s = player.inventory.getSlotForItem(stack.getItem());
+			if(s != null)
+			{
+				ItemStack playerStack = s.getStack();
+				if(playerStack != ItemStack.EMPTY)
+					playerCount = playerStack.getAmount();
+			}
 			stack.setAmount(playerCount);
 
 			int row = i / 5;
@@ -130,7 +135,9 @@ public class MarketOverlay extends Overlay
 			{
 				player.incMoney(selected.sell);
 				selected.stack.dec(1);
-				player.inventory.getStackForItem(selected.stack.getItem()).dec(1);
+				Slot s = player.inventory.getSlotForItem(selected.stack.getItem());
+				if(s != null)
+					s.decrementSlotCount();
 			}
 			else
 			{

@@ -18,7 +18,7 @@ public class LightAttribute extends Attribute
 
 	public LightAttribute(float currentValue, float minValue, float maxValue)
 	{
-		super(currentValue, minValue, maxValue, 0);
+		super(currentValue, 0, 1, 0);
 	}
 
 	@Override

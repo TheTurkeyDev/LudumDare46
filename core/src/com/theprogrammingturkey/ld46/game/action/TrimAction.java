@@ -12,8 +12,8 @@ public class TrimAction extends Action
 	{
 		super("Trim", () ->
 		{
-			player.getInventory().addToInventory(plant.getSaplingItem());
-			plant.trim();
+			if(plant.trim())
+				player.getInventory().addToInventory(plant.getSaplingItem());
 			if(plant.isDead())
 				LD46.SNACK_BAR.createSnackMessage("SEEMS THE PLANT DIDN'T SURVIVE THE TRIM", Color.RED);
 			SoundManager.playRandomSnip();

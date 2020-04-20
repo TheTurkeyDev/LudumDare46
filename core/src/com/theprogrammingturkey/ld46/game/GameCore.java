@@ -15,7 +15,6 @@ import com.theprogrammingturkey.ld46.game.action.ChopAction;
 import com.theprogrammingturkey.ld46.game.action.TrimAction;
 import com.theprogrammingturkey.ld46.game.action.WateringAction;
 import com.theprogrammingturkey.ld46.item.ItemStack;
-import com.theprogrammingturkey.ld46.registry.PlantFactory;
 import com.theprogrammingturkey.ld46.screen.GameScreen;
 import com.theprogrammingturkey.ld46.screen.overlay.ActionsOverlay;
 import com.theprogrammingturkey.ld46.screen.overlay.InventoryExtensionOverlay;
@@ -64,6 +63,7 @@ public class GameCore
 				screen.getCurrentOverlay().close();
 			else
 				screen.setCurrentOverlay(new InventoryExtensionOverlay(screen, null, thePlayer));
+			return true;
 		}
 		else if(keycode == Input.Keys.SPACE)
 		{
@@ -77,29 +77,35 @@ public class GameCore
 			{
 				thePlayer.setState(PlayerState.NONE);
 			}
+			return true;
 		}
 		else if(keycode == Input.Keys.SHIFT_LEFT)
 		{
 			thePlayer.setRunning(true);
+			return true;
 		}
 
 		if(keycode == Input.Keys.W)
 		{
 			thePlayer.setMoveState(Direction.UP, true);
+			return true;
 		}
 		else if(keycode == Input.Keys.A)
 		{
 			thePlayer.setMoveState(Direction.LEFT, true);
+			return true;
 		}
 		else if(keycode == Input.Keys.S)
 		{
 			thePlayer.setMoveState(Direction.DOWN, true);
+			return true;
 		}
 		else if(keycode == Input.Keys.D)
 		{
 			thePlayer.setMoveState(Direction.RIGHT, true);
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public boolean keyUp(int keycode)

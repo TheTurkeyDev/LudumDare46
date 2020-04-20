@@ -1,11 +1,13 @@
 package com.theprogrammingturkey.ld46.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
+import com.theprogrammingturkey.ld46.LD46;
 import com.theprogrammingturkey.ld46.game.GameCore;
 import com.theprogrammingturkey.ld46.game.World;
 import com.theprogrammingturkey.ld46.inventory.Inventory;
@@ -16,6 +18,7 @@ import com.theprogrammingturkey.ld46.rendering.Renderer;
 import com.theprogrammingturkey.ld46.rendering.Textures;
 import com.theprogrammingturkey.ld46.screen.overlay.InventoryExtensionOverlay;
 import com.theprogrammingturkey.ld46.screen.overlay.Overlay;
+import com.theprogrammingturkey.ld46.sounds.SoundManager;
 import com.theprogrammingturkey.ld46.util.StringUtil;
 
 public class GameScreen implements Screen
@@ -38,7 +41,13 @@ public class GameScreen implements Screen
 				{
 					if(currenOverlay != null)
 						return currenOverlay.keyDown(keycode);
-					return theGame.keyDown(keycode);
+					if(!theGame.keyDown(keycode))
+					{
+						if(keycode == Input.Keys.ESCAPE)
+						{
+							LD46.INSTANCE.setScreen(new SettingsScreen(GameScreen.this));
+						}
+					}
 				}
 				return true;
 			}
@@ -79,12 +88,14 @@ public class GameScreen implements Screen
 				return true;
 			}
 		};
-		Gdx.input.setInputProcessor(stage);
+
 	}
 
 	@Override
 	public void show()
 	{
+		SoundManager.startBGSound();
+		Gdx.input.setInputProcessor(stage);
 	}
 
 	public void update()
@@ -196,7 +207,7 @@ public class GameScreen implements Screen
 	@Override
 	public void hide()
 	{
-
+		SoundManager.stopBGSound();
 	}
 
 	@Override

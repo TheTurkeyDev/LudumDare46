@@ -45,7 +45,7 @@ public class LifePointsAttribute extends Attribute
 
 		currentValue = MathUtils.clamp(currentValue, getMinValue(), getMaxValue());
 
-		if(currentValue <= 0)
+		if(currentValue <= 0 && !plant.isDead())
 			plant.kill();
 	}
 

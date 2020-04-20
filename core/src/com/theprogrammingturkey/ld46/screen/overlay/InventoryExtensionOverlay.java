@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.theprogrammingturkey.ld46.entity.Player;
-import com.theprogrammingturkey.ld46.game.GameCore;
 import com.theprogrammingturkey.ld46.inventory.Inventory;
 import com.theprogrammingturkey.ld46.inventory.Slot;
 import com.theprogrammingturkey.ld46.item.ItemStack;
@@ -141,8 +140,16 @@ public class InventoryExtensionOverlay extends Overlay
 				}
 				else
 				{
-					if(s.addItemToSlot(pickedUp))
+					if(s.getStack() != ItemStack.EMPTY)
+					{
+						ItemStack stack = s.removeFromSlotFull();
+						if(s.addItemToSlot(pickedUp))
+							pickedUp = stack;
+					}
+					else if(s.addItemToSlot(pickedUp))
+					{
 						pickedUp = ItemStack.EMPTY;
+					}
 				}
 			}
 		}

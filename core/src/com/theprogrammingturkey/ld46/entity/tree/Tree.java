@@ -47,9 +47,11 @@ public class Tree extends Plant
 	@Override
 	public void kill()
 	{
+		if(isDead())
+			return;
 		super.kill();
 		PlantFactory plantFactory = new PlantFactory(PlantType.TREE, "dead");
-		Plant p = plantFactory.create(world, location.cpy(), 0);
+		Plant p = plantFactory.create(world, location.cpy(), 1);
 		p.setSize(96);
 		world.spawnPlant(p);
 	}

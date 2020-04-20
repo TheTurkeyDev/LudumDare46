@@ -42,6 +42,17 @@ public class Slot
 		return removed;
 	}
 
+	public ItemStack removeFromSlotFull()
+	{
+		ItemStack removed = ItemStack.EMPTY;
+		if(this.stack != ItemStack.EMPTY)
+		{
+			removed = new ItemStack(this.stack.getItem(), this.stack.getAmount());
+			this.stack = ItemStack.EMPTY;
+		}
+		return removed;
+	}
+
 	public void decrementSlotCount()
 	{
 		if(this.stack != ItemStack.EMPTY && this.stack.getAmount() > 0)

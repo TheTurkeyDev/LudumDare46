@@ -2,6 +2,7 @@ package com.theprogrammingturkey.ld46.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,7 +17,7 @@ import com.theprogrammingturkey.ld46.rendering.Renderer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenuScreen implements Screen
+public class CreditsScreen implements Screen
 {
 	private Stage stage;
 
@@ -28,11 +29,7 @@ public class MainMenuScreen implements Screen
 	{
 		int x = Gdx.graphics.getWidth() / 2;
 
-		buttons.add(new Rectangle(x - 300, Gdx.graphics.getHeight() - 275, 600, 50));
-		buttons.add(new Rectangle(x - 300, Gdx.graphics.getHeight() - 375, 600, 50));
-		buttons.add(new Rectangle(x - 300, Gdx.graphics.getHeight() - 475, 600, 50));
-		buttons.add(new Rectangle(x - 300, Gdx.graphics.getHeight() - 575, 600, 50));
-		buttons.add(new Rectangle(x - 300, Gdx.graphics.getHeight() - 675, 600, 50));
+		buttons.add(new Rectangle(15, 15, 200, 50));
 
 		stage = new Stage()
 		{
@@ -46,23 +43,7 @@ public class MainMenuScreen implements Screen
 					{
 						if(i == 0)
 						{
-							LD46.INSTANCE.setScreen(new GameScreen());
-						}
-						if(i == 1)
-						{
-							LD46.INSTANCE.setScreen(new HelpScreen());
-						}
-						if(i == 2)
-						{
-							LD46.INSTANCE.setScreen(new CreditsScreen());
-						}
-						else if(i == 3)
-						{
-							LD46.INSTANCE.setScreen(new SettingsScreen(MainMenuScreen.this));
-						}
-						else if(i == 4)
-						{
-							System.exit(0);
+							LD46.INSTANCE.setScreen(new MainMenuScreen());
 						}
 					}
 				}
@@ -91,13 +72,19 @@ public class MainMenuScreen implements Screen
 		stage.act(delta);
 
 		Renderer.drawRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), GameColors.DIRT_BROWN, true);
-		Renderer.drawStringAligned(Renderer.font, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - 50, "TURKEY'S PLANT EMPORIUM", 2.5f, Align.center, GameColors.PLANT_GREEN);
+		Renderer.drawStringAligned(Renderer.font, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - 50, "CREDITS", 2.5f, Align.center, GameColors.PLANT_GREEN);
+		Renderer.drawStringAligned(Renderer.font, 115, 40, "BACK", 1.5f, Align.center, GameColors.PLANT_GREEN);
 
-		Renderer.drawStringAligned(Renderer.font, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - 250, "START", 1.5f, Align.center, GameColors.PLANT_GREEN);
-		Renderer.drawStringAligned(Renderer.font, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - 350, "HOW TO PLAY", 1.5f, Align.center, GameColors.PLANT_GREEN);
-		Renderer.drawStringAligned(Renderer.font, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - 450, "CREDITS", 1.5f, Align.center, GameColors.PLANT_GREEN);
-		Renderer.drawStringAligned(Renderer.font, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - 550, "SETTINGS", 1.5f, Align.center, GameColors.PLANT_GREEN);
-		Renderer.drawStringAligned(Renderer.font, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - 650, "QUIT", 1.5f, Align.center, GameColors.PLANT_GREEN);
+		int index = (Gdx.graphics.getWidth() / 2);
+		Renderer.drawStringAligned(Renderer.font, index, Gdx.graphics.getHeight() - 250, "TURKEY", 2f, Align.center, GameColors.PLANT_GREEN);
+		Renderer.drawStringAligned(Renderer.font, index, Gdx.graphics.getHeight() - 300, "- CODE", 1f, Align.center, Color.BLACK);
+		Renderer.drawStringAligned(Renderer.font, index, Gdx.graphics.getHeight() - 330, "TWITCH.TV/TURKEY2349", 1f, Align.center, Color.PURPLE);
+		Renderer.drawStringAligned(Renderer.font, index, Gdx.graphics.getHeight() - 360, "YOUTUBE.COM/IPROGRAM4FUN", 1f, Align.center, Color.RED);
+
+		Renderer.drawStringAligned(Renderer.font, index, Gdx.graphics.getHeight() - 450, "SPACEMYNAME", 2f, Align.center, GameColors.PLANT_GREEN);
+		Renderer.drawStringAligned(Renderer.font, index, Gdx.graphics.getHeight() - 500, "- ASSETS AND SOUNDS", 1f, Align.center, Color.BLACK);
+		Renderer.drawStringAligned(Renderer.font, index, Gdx.graphics.getHeight() - 530, "TWITCH.TV/SPACEMYNAME9749", 1f, Align.center, Color.PURPLE);
+		Renderer.drawStringAligned(Renderer.font, index, Gdx.graphics.getHeight() - 560, "TWITTER.COM/SPACEMYNAME", 1f, Align.center, Color.SKY);
 
 
 		for(Plant plant : plants)

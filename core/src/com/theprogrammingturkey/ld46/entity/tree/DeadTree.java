@@ -6,7 +6,6 @@ import com.theprogrammingturkey.ld46.LD46;
 import com.theprogrammingturkey.ld46.game.World;
 import com.theprogrammingturkey.ld46.item.ItemStack;
 import com.theprogrammingturkey.ld46.registry.ItemRegistry;
-import com.theprogrammingturkey.ld46.rendering.WrapperTR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +33,9 @@ public class DeadTree extends Tree
 	}
 
 	@Override
-	public void trim()
+	public boolean trim()
 	{
 		LD46.SNACK_BAR.createSnackMessage("YOU CANNOT TRIM THIS TREE!", Color.RED);
+		return false;
 	}
 }

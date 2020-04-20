@@ -60,8 +60,6 @@ public class World
 		plantList.add(plant);
 
 		entityList.add(new Market(this, new Vector2(50, 50)));
-
-		SoundManager.startBGSound();
 	}
 
 	public void update()
